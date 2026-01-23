@@ -1,0 +1,113 @@
+<!--pages/plant-add/plant-add.wxml-->
+<view class="container">
+  <form bindsubmit="onSubmit">
+    <!-- 图片上传 -->
+    <view class="upload-section" bindtap="onChooseImage">
+      <image 
+        class="upload-image" 
+        src="{{imageUrl || '/images/plant-placeholder.svg'}}"
+        mode="aspectFill"
+      ></image>
+      <view class="upload-overlay" wx:if="{{!imageUrl}}">
+        <image class="upload-icon" src="/images/upload.svg" mode="aspectFit"></image>
+        <text class="upload-text">点击上传图片</text>
+      </view>
+      <view class="upload-remove" wx:if="{{imageUrl}}" catchtap="onRemoveImage">
+        <image class="remove-icon" src="/images/close.svg" mode="aspectFit"></image>
+      </view>
+    </view>
+
+    <!-- 基本信息 -->
+    <view class="form-section">
+      <view class="section-title">基本信息</view>
+      
+      <view class="form-item">
+        <text class="form-label">植物名称 <text class="required">*</text></text>
+        <input 
+          class="form-input" 
+          name="name" 
+          placeholder="请输入植物名称" 
+          value="{{formData.name}}"
+          bindinput="onInputChange" 
+          data-field="name"
+        />
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">植物类型 <text class="required">*</text></text>
+        <picker 
+          mode="selector" 
+          range="{{plantTypes}}" 
+          value="{{typeIndex}}"
+          bindchange="onTypeChange"
+        >
+          <view class="form-picker">
+            <text class="picker-text">{{formData.type || '请选择植物类型'}}</text>
+            <image class="picker-arrow" src="/images/arrow-down.svg" mode="aspectFit"></image>
+          </view>
+        </picker>
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">种植日期 <text class="required">*</text></text>
+        <picker 
+          mode="date" 
+          value="{{formData.plantDate}}" 
+          end="{{today}}"
+          bindchange="onDateChange"
+        >
+          <view class="form-picker">
+            <text class="picker-text">{{formData.plantDate || '请选择种植日期'}}</text>
+            <image class="picker-arrow" src="/images/arrow-down.svg" mode="aspectFit"></image>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 生长状态 -->
+    <view class="form-section">
+      <view class="section-title">生长状态</view>
+      
+      <view class="form-item">
+        <text class="form-label">当前状态</text>
+        <picker 
+          mode="selector" 
+          range="{{statusOptions}}" 
+          range-key="label"
+          value="{{statusIndex}}"
+          bindchange="onStatusChange"
+        >
+          <view class="form-picker">
+            <text class="picker-text">{{statusLabel || '请选择状态'}}</text>
+            <image class="picker-arrow" src="/images/arrow-down.svg" mode="aspectFit"></image>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 备注 -->
+    <view class="form-section">
+      <view class="section-title">备注</view>
+      
+      <view class="form-item">
+        <textarea 
+          class="form-textarea" 
+          name="description" 
+          placeholder="添加备注信息（可选）" 
+          value="{{formData.description}}"
+          bindinput="onInputChange" 
+          data-field="description"
+          maxlength="200"
+        ></textarea>
+        <text class="char-count">{{formData.description.length}}/200</text>
+      </view>
+    </view>
+
+    <!-- 提交按钮 -->
+    <view class="submit-section">
+      <button class="submit-btn" formType="submit">
+        {{isEdit ? '保存修改' : '添加植物'}}
+      </button>
+    </view>
+  </form>
+</view>

@@ -1,0 +1,77 @@
+<!--pages/records/records.wxml-->
+<view class="container">
+  <!-- 筛选器 -->
+  <view class="filter-bar">
+    <scroll-view class="filter-scroll" scroll-x="true" show-scrollbar="false">
+      <view 
+        class="filter-item {{selectedType === '' ? 'active' : ''}}" 
+        bindtap="onFilterChange" 
+        data-type=""
+      >
+        全部
+      </view>
+      <view 
+        class="filter-item {{selectedType === 'watering' ? 'active' : ''}}" 
+        bindtap="onFilterChange" 
+        data-type="watering"
+      >
+        浇水
+      </view>
+      <view 
+        class="filter-item {{selectedType === 'fertilizing' ? 'active' : ''}}" 
+        bindtap="onFilterChange" 
+        data-type="fertilizing"
+      >
+        施肥
+      </view>
+      <view 
+        class="filter-item {{selectedType === 'growth' ? 'active' : ''}}" 
+        bindtap="onFilterChange" 
+        data-type="growth"
+      >
+        生长
+      </view>
+      <view 
+        class="filter-item {{selectedType === 'photo' ? 'active' : ''}}" 
+        bindtap="onFilterChange" 
+        data-type="photo"
+      >
+        照片
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 记录列表 -->
+  <view class="records-list">
+    <view class="date-group" wx:for="{{groupedRecords}}" wx:key="date">
+      <view class="date-header">
+        <text class="date-text">{{item.date}}</text>
+        <text class="date-count">{{item.records.length}}条记录</text>
+      </view>
+
+      <view class="record-card" wx:for="{{item.records}}" wx:for-item="record" wx:key="_id" bindtap="onRecordDetail" data-id="{{record._id}}">
+        <view class="record-icon-wrapper">
+          <image class="record-icon" src="{{getRecordIcon(record.type)}}" mode="aspectFit"></image>
+        </view>
+        <view class="record-info">
+          <text class="record-title">{{getRecordTitle(record.type)}}</text>
+          <text class="record-plant">{{record.plantName}}</text>
+          <text class="record-time">{{formatTime(record.recordTime)}}</text>
+        </view>
+        <image class="record-arrow" src="/images/arrow-right.svg" mode="aspectFit"></image>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{filteredRecords.length === 0}}">
+      <image class="empty-icon" src="/images/empty-records.svg" mode="aspectFit"></image>
+      <text class="empty-text">还没有记录</text>
+      <text class="empty-hint">点击下方按钮添加第一条记录</text>
+    </view>
+  </view>
+
+  <!-- 添加按钮 -->
+  <view class="add-btn" bindtap="onAddRecord">
+    <image class="add-icon" src="/images/add.svg" mode="aspectFit"></image>
+  </view>
+</view>

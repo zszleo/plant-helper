@@ -1,0 +1,109 @@
+<!--pages/record-add/record-add.wxml-->
+<view class="container">
+  <form bindsubmit="onSubmit">
+    <!-- 植物选择 -->
+    <view class="form-section">
+      <view class="section-title">选择植物</view>
+      
+      <view class="form-item">
+        <picker 
+          mode="selector" 
+          range="{{plantOptions}}" 
+          range-key="name"
+          value="{{plantIndex}}"
+          bindchange="onPlantChange"
+        >
+          <view class="form-picker">
+            <text class="picker-text">{{selectedPlant ? selectedPlant.name : '请选择植物'}}</text>
+            <image class="picker-arrow" src="/images/arrow-down.svg" mode="aspectFit"></image>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 记录类型 -->
+    <view class="form-section">
+      <view class="section-title">记录类型</view>
+      
+      <view class="type-grid">
+        <view 
+          class="type-item {{formData.type === 'watering' ? 'active' : ''}}" 
+          bindtap="onTypeSelect" 
+          data-type="watering"
+        >
+          <image class="type-icon" src="/images/water.svg" mode="aspectFit"></image>
+          <text class="type-text">浇水</text>
+        </view>
+        <view 
+          class="type-item {{formData.type === 'fertilizing' ? 'active' : ''}}" 
+          bindtap="onTypeSelect" 
+          data-type="fertilizing"
+        >
+          <image class="type-icon" src="/images/fertilizer.svg" mode="aspectFit"></image>
+          <text class="type-text">施肥</text>
+        </view>
+        <view 
+          class="type-item {{formData.type === 'growth' ? 'active' : ''}}" 
+          bindtap="onTypeSelect" 
+          data-type="growth"
+        >
+          <image class="type-icon" src="/images/growth.svg" mode="aspectFit"></image>
+          <text class="type-text">生长</text>
+        </view>
+        <view 
+          class="type-item {{formData.type === 'photo' ? 'active' : ''}}" 
+          bindtap="onTypeSelect" 
+          data-type="photo"
+        >
+          <image class="type-icon" src="/images/photo.svg" mode="aspectFit"></image>
+          <text class="type-text">拍照</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 记录时间 -->
+    <view class="form-section">
+      <view class="section-title">记录时间</view>
+      
+      <view class="form-item">
+        <picker 
+          mode="multiSelector" 
+          range="{{dateRange}}" 
+          range-key="label"
+          value="{{dateIndex}}"
+          bindchange="onDateChange"
+        >
+          <view class="form-picker">
+            <text class="picker-text">{{recordTimeDisplay}}</text>
+            <image class="picker-arrow" src="/images/arrow-down.svg" mode="aspectFit"></image>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 备注 -->
+    <view class="form-section">
+      <view class="section-title">备注</view>
+      
+      <view class="form-item">
+        <textarea 
+          class="form-textarea" 
+          name="notes" 
+          placeholder="添加备注信息（可选）" 
+          value="{{formData.notes}}"
+          bindinput="onInputChange" 
+          data-field="notes"
+          maxlength="200"
+        ></textarea>
+        <text class="char-count">{{formData.notes.length}}/200</text>
+      </view>
+    </view>
+
+    <!-- 提交按钮 -->
+    <view class="submit-section">
+      <button class="submit-btn" formType="submit">
+        添加记录
+      </button>
+    </view>
+  </form>
+</view>

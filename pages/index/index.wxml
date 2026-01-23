@@ -1,0 +1,72 @@
+<!--pages/index/index.wxml-->
+<wxs module="statusFormatter">
+var formatStatus = function(status) {
+  var statusMap = {
+    'healthy': '健康',
+    'growing': '生长中',
+    'need-care': '需照料',
+    'diseased': '生病'
+  }
+  return statusMap[status] || '未知'
+}
+module.exports = {
+  formatStatus: formatStatus
+}
+</wxs>
+<!-- 顶部搜索栏 -->
+<view class="search-bar">
+  <view class="search-input-wrapper">
+    <image class="search-icon" src="/images/search.svg" mode="aspectFit"></image>
+    <input
+      class="search-input"
+      placeholder="搜索植物名称或类型"
+      value="{{searchKeyword}}"
+      bindinput="onSearchInput"
+      bindconfirm="onSearch"
+    />
+    <view class="clear-btn" wx:if="{{searchKeyword}}" bindtap="onClearSearch">
+      <image class="clear-icon" src="/images/close.svg" mode="aspectFit"></image>
+    </view>
+  </view>
+  <view class="sync-btn" bindtap="onSync">
+    <image class="sync-icon" src="/images/sync.svg" mode="aspectFit"></image>
+    <text class="sync-text">同步</text>
+  </view>
+</view>
+
+<view class="container" id="pageContainer" scroll-top="{{scrollTop}}">
+  <!-- 植物列表 -->
+  <view class="plant-list">
+    <view class="plant-card" wx:for="{{filteredPlants}}" wx:key="_id" bindtap="onPlantDetail" data-id="{{item._id}}">
+      <image class="plant-image" src="{{item.imageUrl || '/images/plant-placeholder.svg'}}" mode="aspectFill"></image>
+      <view class="plant-info">
+        <text class="plant-name">{{item.name}}</text>
+        <view class="plant-meta">
+          <text class="plant-type">{{item.type}}</text>
+          <text class="meta-separator">·</text>
+          <view class="plant-status">
+            <text class="status-text">{{statusFormatter.formatStatus(item.status)}}</text>
+            <text class="status-icon">{{item.status === 'healthy' ? '🌿' : item.status === 'growing' ? '🌱' : item.status === 'need-care' ? '⚠️' : item.status === 'diseased' ? '🚨' : ''}}</text>
+          </view>
+        </view>
+        <text class="plant-description" wx:if="{{item.description}}">{{item.description}}</text>
+      </view>
+      <view class="plant-actions">
+        <text class="record-count">{{item.recordCount || 0}}条记录</text>
+        <image class="arrow-icon" src="/images/arrow-right.svg" mode="aspectFit"></image>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{filteredPlants.length === 0}}">
+      <image class="empty-icon" src="/images/empty-plants.svg" mode="aspectFit"></image>
+      <text class="empty-text">还没有添加植物</text>
+      <text class="empty-hint">点击下方按钮添加你的第一株植物</text>
+    </view>
+  </view>
+
+  <!-- 添加按钮 -->
+  <view class="add-btn" bindtap="onAddPlant">
+    <image class="add-icon" src="/images/add.svg" mode="aspectFit"></image>
+  </view>
+</view>

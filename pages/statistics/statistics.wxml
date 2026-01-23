@@ -1,0 +1,67 @@
+<!--pages/statistics/statistics.wxml-->
+<view class="container">
+  <!-- 植物状态统计 -->
+  <view class="section">
+    <view class="section-title">植物状态统计</view>
+    <view class="plant-status-summary">
+      <view class="summary-item" bindtap="onTotalPlantsClick">
+        <view class="summary-value">{{plantStatus.total}}</view>
+        <view class="summary-label">总植物数</view>
+      </view>
+    </view>
+    <view class="plant-status-detail">
+      <view class="status-card" wx:for="{{[plantStatus.healthy, plantStatus.growing, plantStatus['need-care'], plantStatus.diseased]}}" wx:key="label">
+        <view class="status-card-header">
+          <view class="status-icon" style="background-color: {{item.color}}20; color: {{item.color}}">{{item.icon}}</view>
+          <view class="status-info">
+            <view class="status-name">{{item.label}}</view>
+          </view>
+          <view class="status-stats">
+            <view class="status-percent" style="color: {{item.color}}">{{item.percent}}%</view>
+            <view class="status-count-text">{{item.count}}株</view>
+          </view>
+        </view>
+        <view class="status-progress">
+          <view class="progress-bar">
+            <view class="progress-fill" style="width: {{item.percent}}%; background-color: {{item.color}}"></view>
+          </view>
+          <view class="progress-text">{{item.percent}}%</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 记录类型分布 -->
+  <view class="section">
+    <view class="section-title">记录类型分布</view>
+    <view class="type-distribution">
+      <view class="type-item" wx:for="{{recordStats}}" wx:key="type">
+        <view class="type-icon {{item.type}}" style="background-color: {{item.color}}20; color: {{item.color}}">{{item.icon}}</view>
+        <view class="type-info">
+          <view class="type-name">{{item.name}}</view>
+        </view>
+        <view class="type-stats">
+          <view class="type-percent" style="color: {{item.color}}">{{item.percent}}%</view>
+          <view class="type-count-text">{{item.count}}次</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 每日趋势 -->
+  <view class="section">
+    <view class="section-header" bindtap="onToggleTrend">
+      <view class="section-title">每日趋势</view>
+      <view class="toggle-text">{{showFullTrend ? '收起' : '展开'}}</view>
+    </view>
+    <view class="daily-trend">
+      <view class="trend-item" wx:for="{{dailyTrend}}" wx:key="date">
+        <view class="trend-date">{{item.label}}</view>
+        <view class="trend-bar">
+          <view class="trend-fill" style="width: {{item.percent}}%"></view>
+        </view>
+        <view class="trend-count">{{item.count}}</view>
+      </view>
+    </view>
+  </view>
+</view>

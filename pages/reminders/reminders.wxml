@@ -1,0 +1,73 @@
+<!--pages/reminders/reminders.wxml-->
+<view class="container">
+  <!-- 统计栏 -->
+  <view class="stats-bar">
+    <view class="stat-item">
+      <text class="stat-value">{{totalCount}}</text>
+      <text class="stat-label">全部</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <text class="stat-value active">{{activeCount}}</text>
+      <text class="stat-label">活跃</text>
+    </view>
+  </view>
+
+  <!-- 提醒列表 -->
+  <view class="reminders-list">
+    <view class="reminder-card" wx:for="{{reminders}}" wx:key="_id">
+      <view class="reminder-header">
+        <view class="reminder-info">
+          <view class="reminder-icon-wrapper">
+            <image class="reminder-icon" src="{{getReminderIcon(item.type)}}" mode="aspectFit"></image>
+          </view>
+          <view class="reminder-text">
+            <text class="reminder-title">{{getReminderTitle(item.type)}}</text>
+            <text class="reminder-plant">{{item.plantName}}</text>
+          </view>
+        </view>
+        <switch 
+          class="reminder-switch" 
+          checked="{{item.isEnabled}}" 
+          bindchange="onToggleReminder" 
+          data-id="{{item._id}}" 
+          color="#4CAF50"
+        />
+      </view>
+
+      <view class="reminder-details">
+        <view class="detail-item">
+          <image class="detail-icon" src="/images/clock.png" mode="aspectFit"></image>
+          <text class="detail-text">{{item.time}}</text>
+        </view>
+        <view class="detail-item">
+          <image class="detail-icon" src="/images/calendar.png" mode="aspectFit"></image>
+          <text class="detail-text">{{getFrequencyText(item.frequency)}}</text>
+        </view>
+      </view>
+
+      <view class="reminder-actions">
+        <view class="action-btn" bindtap="onEditReminder" data-id="{{item._id}}">
+          <image class="action-icon" src="/images/edit.png" mode="aspectFit"></image>
+          <text class="action-text">编辑</text>
+        </view>
+        <view class="action-btn delete" bindtap="onDeleteReminder" data-id="{{item._id}}">
+          <image class="action-icon" src="/images/delete.png" mode="aspectFit"></image>
+          <text class="action-text">删除</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{reminders.length === 0}}">
+      <image class="empty-icon" src="/images/empty-reminders.svg" mode="aspectFit"></image>
+      <text class="empty-text">还没有设置提醒</text>
+      <text class="empty-hint">点击下方按钮添加第一个提醒</text>
+    </view>
+  </view>
+
+  <!-- 添加按钮 -->
+  <view class="add-btn" bindtap="onAddReminder">
+    <image class="add-icon" src="/images/add.svg" mode="aspectFit"></image>
+  </view>
+</view>

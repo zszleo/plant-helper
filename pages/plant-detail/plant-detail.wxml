@@ -1,0 +1,115 @@
+<!--pages/plant-detail/plant-detail.wxml-->
+<view class="container" wx:if="{{plant}}">
+  <!-- 植物图片 -->
+  <view class="image-section">
+    <image 
+      class="plant-image" 
+      src="{{plant.imageUrl || '/images/plant-placeholder.svg'}}"
+      mode="aspectFill"
+    ></image>
+  </view>
+
+  <!-- 植物信息 -->
+  <view class="info-section">
+    <view class="info-header">
+      <text class="plant-name">{{plant.name}}</text>
+      <view class="plant-status">
+        <view class="status-dot status-{{plant.status}}"></view>
+        <text class="status-text">{{formatStatus(plant.status)}}</text>
+      </view>
+    </view>
+
+    <view class="info-grid">
+      <view class="info-item">
+        <text class="info-label">类型</text>
+        <text class="info-value">{{plant.type}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">种植日期</text>
+        <text class="info-value">{{formatDate(plant.plantDate)}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">记录数</text>
+        <text class="info-value">{{recordCount}}条</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">种植天数</text>
+        <text class="info-value">{{plantDays}}天</text>
+      </view>
+    </view>
+
+    <view class="info-description" wx:if="{{plant.description}}">
+      <text class="description-label">备注</text>
+      <text class="description-text">{{plant.description}}</text>
+    </view>
+  </view>
+
+  <!-- 快捷操作 -->
+  <view class="quick-actions">
+    <view class="action-item" bindtap="onAddRecord" data-type="watering">
+      <image class="action-icon" src="/images/water.svg" mode="aspectFit"></image>
+      <text class="action-text">浇水</text>
+    </view>
+    <view class="action-item" bindtap="onAddRecord" data-type="fertilizing">
+      <image class="action-icon" src="/images/fertilizer.svg" mode="aspectFit"></image>
+      <text class="action-text">施肥</text>
+    </view>
+    <view class="action-item" bindtap="onAddRecord" data-type="growth">
+      <image class="action-icon" src="/images/growth.svg" mode="aspectFit"></image>
+      <text class="action-text">生长</text>
+    </view>
+    <view class="action-item" bindtap="onAddRecord" data-type="photo">
+      <image class="action-icon" src="/images/photo.svg" mode="aspectFit"></image>
+      <text class="action-text">拍照</text>
+    </view>
+  </view>
+
+  <!-- 生长记录 -->
+  <view class="records-section">
+    <view class="section-header">
+      <text class="section-title">生长记录</text>
+      <view class="section-more" bindtap="onViewAllRecords">
+        <text class="more-text">查看全部</text>
+        <image class="more-icon" src="/images/arrow-right.svg" mode="aspectFit"></image>
+      </view>
+    </view>
+
+    <view class="records-list">
+      <view class="record-item" wx:for="{{recentRecords}}" wx:key="_id" bindtap="onRecordDetail" data-id="{{item._id}}">
+        <view class="record-icon-wrapper">
+          <image class="record-icon" src="{{getRecordIcon(item.type)}}" mode="aspectFit"></image>
+        </view>
+        <view class="record-info">
+          <text class="record-title">{{getRecordTitle(item.type)}}</text>
+          <text class="record-time">{{formatTime(item.recordTime)}}</text>
+        </view>
+        <image class="record-arrow" src="/images/arrow-right.svg" mode="aspectFit"></image>
+      </view>
+
+      <!-- 空状态 -->
+      <view class="empty-records" wx:if="{{recentRecords.length === 0}}">
+        <image class="empty-icon" src="/images/empty-records.svg" mode="aspectFit"></image>
+        <text class="empty-text">还没有记录</text>
+        <text class="empty-hint">点击上方按钮添加第一条记录</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-actions">
+    <view class="action-btn edit-btn" bindtap="onEdit">
+      <image class="btn-icon" src="/images/edit.svg" mode="aspectFit"></image>
+      <text class="btn-text">编辑</text>
+    </view>
+    <view class="action-btn delete-btn" bindtap="onDelete">
+       <image class="btn-icon" src="/images/delete.svg" mode="aspectFit"></image>
+      <text class="btn-text">删除</text>
+    </view>
+  </view>
+</view>
+
+<!-- 加载状态 -->
+<view class="loading-container" wx:if="{{!plant}}">
+  <view class="loading-spinner"></view>
+  <text class="loading-text">加载中...</text>
+</view>
