@@ -47,8 +47,8 @@
     "disableSWC": true
   },
   "compileType": "miniprogram",
-  "libVersion": "2.19.4",
-  "appid": "wxc6f53062d0890e51",
+  "libVersion": "3.13.2",
+  "appid": "wxc1c157a366f859fd",
   "projectname": "植物种植助手",
   "condition": {},
   "editorSetting": {
