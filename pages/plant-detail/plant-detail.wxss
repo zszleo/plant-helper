@@ -120,31 +120,6 @@
   line-height: 1.6;
 }
 
-/* 快捷操作 */
-.quick-actions {
-  display: flex;
-  justify-content: space-around;
-  background: #ffffff;
-  margin-bottom: 20rpx;
-  padding: 30rpx 0;
-}
-
-.action-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.action-icon {
-  width: 64rpx;
-  height: 64rpx;
-  margin-bottom: 12rpx;
-}
-
-.action-text {
-  font-size: 24rpx;
-  color: #666;
-}
 
 /* 记录区域 */
 .records-section {
@@ -300,6 +275,27 @@
 .btn-text {
   font-size: 28rpx;
   color: #333;
+}
+
+/* 添加记录浮动按钮 */
+.add-btn {
+  position: fixed;
+  right: 30rpx;
+  bottom: 200rpx;
+  width: 100rpx;
+  height: 100rpx;
+  background: #4CAF50;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 16rpx rgba(76, 175, 80, 0.4);
+  z-index: 100;
+}
+
+.add-icon {
+  width: 48rpx;
+  height: 48rpx;
 }
 
 /* 加载状态 */

@@ -58,25 +58,6 @@ module.exports = {
     </view>
   </view>
 
-  <!-- 快捷操作 -->
-  <view class="quick-actions">
-    <view class="action-item" bindtap="onAddRecord" data-type="watering">
-      <image class="action-icon" src="/images/water.svg" mode="aspectFit"></image>
-      <text class="action-text">浇水</text>
-    </view>
-    <view class="action-item" bindtap="onAddRecord" data-type="fertilizing">
-      <image class="action-icon" src="/images/fertilizer.svg" mode="aspectFit"></image>
-      <text class="action-text">施肥</text>
-    </view>
-    <view class="action-item" bindtap="onAddRecord" data-type="growth">
-      <image class="action-icon" src="/images/growth.svg" mode="aspectFit"></image>
-      <text class="action-text">生长</text>
-    </view>
-    <view class="action-item" bindtap="onAddRecord" data-type="photo">
-      <image class="action-icon" src="/images/photo.svg" mode="aspectFit"></image>
-      <text class="action-text">拍照</text>
-    </view>
-  </view>
 
   <!-- 生长记录 -->
   <view class="records-section">
@@ -107,6 +88,11 @@ module.exports = {
         <text class="empty-hint">点击上方按钮添加第一条记录</text>
       </view>
     </view>
+  </view>
+
+  <!-- 添加记录浮动按钮 -->
+  <view class="add-btn" bindtap="onFloatAddRecord">
+    <image class="add-icon" src="/images/add.svg" mode="aspectFit"></image>
   </view>
 
   <!-- 底部操作栏 -->

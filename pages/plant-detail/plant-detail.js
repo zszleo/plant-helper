@@ -43,9 +43,16 @@ Page({
     const plant = storage.getPlant(this.data.plantId)
     if (plant) {
       // 计算生长天数
-      const plantDate = new Date(plant.plantDate)
-      const now = new Date()
-      const growthDays = Math.floor((now - plantDate) / (1000 * 60 * 60 * 24))
+      let growthDays = 0
+      if (plant.plantDate) {
+        const plantDate = new Date(plant.plantDate)
+        if (!isNaN(plantDate.getTime())) {
+          const now = new Date()
+          const diffDays = Math.floor((now - plantDate) / (1000 * 60 * 60 * 24))
+          // 种植当天算作第1天
+          growthDays = diffDays >= 0 ? diffDays + 1 : 0
+        }
+      }
 
       // 获取记录数量
       const records = storage.getPlantRecords(this.data.plantId)
@@ -53,8 +60,8 @@ Page({
 
       this.setData({
         plant: plant,
-        growthDays: growthDays >= 0 ? growthDays : 0,
-        plantDays: growthDays >= 0 ? growthDays : 0,
+        growthDays: growthDays,
+        plantDays: growthDays,
         recordCount: recordCount
       })
 
@@ -119,6 +126,18 @@ Page({
   },
 
   /**
+   * 浮动按钮添加记录
+   */
+  onFloatAddRecord() {
+    if (!this.data.plant) return
+    
+    // 直接跳转到记录新增页面，不传递type参数，让用户在记录新增页面选择类型
+    wx.navigateTo({
+      url: `/pages/record-add/record-add?plantId=${this.data.plantId}`
+    })
+  },
+
+  /**
    * 编辑植物
    */
   onEdit() {
@@ -161,8 +180,9 @@ Page({
    * 格式化日期
    */
   formatDate(dateStr) {
-    if (!dateStr) return ''
+    if (!dateStr) return '未设置'
     const date = new Date(dateStr)
+    if (isNaN(date.getTime())) return '日期无效'
     const year = date.getFullYear()
     const month = String(date.getMonth() + 1).padStart(2, '0')
     const day = String(date.getDate()).padStart(2, '0')
@@ -182,20 +202,21 @@ Page({
     return statusMap[status] || '未知'
   },
 
-    /**
-     * 格式化记录时间
-     */
-    formatTime(timeStr) {
-      if (!timeStr) return ''
-      const date = new Date(timeStr)
-      const year = date.getFullYear()
-      const month = String(date.getMonth() + 1).padStart(2, '0')
-      const day = String(date.getDate()).padStart(2, '0')
-      const hours = String(date.getHours()).padStart(2, '0')
-      const minutes = String(date.getMinutes()).padStart(2, '0')
-      const seconds = String(date.getSeconds()).padStart(2, '0')
-      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
-    },
+  /**
+   * 格式化记录时间
+   */
+  formatTime(timeStr) {
+    if (!timeStr) return ''
+    const date = new Date(timeStr)
+    if (isNaN(date.getTime())) return ''
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+    const seconds = String(date.getSeconds()).padStart(2, '0')
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+  },
 
   /**
    * 获取记录图标
