@@ -1,4 +1,18 @@
 <!--pages/plant-detail/plant-detail.wxml-->
+<wxs module="statusFormatter">
+var formatStatus = function(status) {
+  var statusMap = {
+    'healthy': '健康',
+    'growing': '生长中',
+    'need-care': '需照料',
+    'diseased': '生病'
+  }
+  return statusMap[status] || '未知'
+}
+module.exports = {
+  formatStatus: formatStatus
+}
+</wxs>
 <view class="container" wx:if="{{plant}}">
   <!-- 植物图片 -->
   <view class="image-section">
@@ -14,8 +28,8 @@
     <view class="info-header">
       <text class="plant-name">{{plant.name}}</text>
       <view class="plant-status">
-        <view class="status-dot status-{{plant.status}}"></view>
-        <text class="status-text">{{formatStatus(plant.status)}}</text>
+        <text class="status-text">{{statusFormatter.formatStatus(plant.status)}}</text>
+        <text class="status-icon">{{plant.status === 'healthy' ? '🌿' : plant.status === 'growing' ? '🌱' : plant.status === 'need-care' ? '⚠️' : plant.status === 'diseased' ? '🚨' : ''}}</text>
       </view>
     </view>
 
@@ -26,7 +40,7 @@
       </view>
       <view class="info-item">
         <text class="info-label">种植日期</text>
-        <text class="info-value">{{formatDate(plant.plantDate)}}</text>
+        <text class="info-value">{{plant.plantDate}}</text>
       </view>
       <view class="info-item">
         <text class="info-label">记录数</text>
