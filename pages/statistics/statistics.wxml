@@ -49,7 +49,7 @@
   </view>
 
   <!-- 每月趋势 - GitHub风格热力图 -->
-  <view class="section">
+  <view class="section" catchtap="onSectionTap">
     <view class="section-header">
       <view class="section-title">每月趋势</view>
       <view class="heatmap-legend">
@@ -79,12 +79,15 @@
             wx:for="{{item.cells}}"
             wx:for-item="cell"
             wx:key="date"
-            bindtap="onCellTap"
+            catchtap="onCellTap"
             data-date="{{cell.date}}"
             data-count="{{cell.count}}"
           >
             <view class="cell-date">{{cell.day}}</view>
-            <view class="cell-tooltip" wx:if="{{activeCell === cell.date && cell.count > 0}}">{{cell.date}} {{cell.count}}次记录</view>
+            <view class="cell-tooltip" wx:if="{{activeCell === cell.date}}">
+              <text wx:if="{{cell.count > 0}}">{{cell.date}} {{cell.count}}条种植记录</text>
+              <text wx:else>{{cell.date}}没有记录</text>
+            </view>
           </view>
         </view>
       </view>

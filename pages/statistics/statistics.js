@@ -173,8 +173,12 @@ Page({
     // 创建日期到记录数的映射
     const dateCountMap = {}
     records.forEach(record => {
-      const recordDate = new Date(record.recordTime).toISOString().split('T')[0]
-      dateCountMap[recordDate] = (dateCountMap[recordDate] || 0) + 1
+      const recordDate = new Date(record.recordTime)
+      const year = recordDate.getFullYear()
+      const month = String(recordDate.getMonth() + 1).padStart(2, '0')
+      const day = String(recordDate.getDate()).padStart(2, '0')
+      const dateStr = `${year}-${month}-${day}`
+      dateCountMap[dateStr] = (dateCountMap[dateStr] || 0) + 1
     })
 
     // 计算最大记录数用于颜色分级
@@ -211,8 +215,11 @@ Page({
     for (let i = 0; i < daysToAddBefore; i++) {
       const prevDate = new Date(firstDayOfMonth)
       prevDate.setDate(prevDate.getDate() - (daysToAddBefore - i))
+      const year = prevDate.getFullYear()
+      const month = String(prevDate.getMonth() + 1).padStart(2, '0')
+      const day = String(prevDate.getDate()).padStart(2, '0')
       currentWeek.push({
-        date: prevDate.toISOString().split('T')[0],
+        date: `${year}-${month}-${day}`,
         day: prevDate.getDate(),
         count: 0,
         level: -1
@@ -225,7 +232,10 @@ Page({
       const dayOfWeek = date.getDay()
       
       // 将日期转换为热力图单元格数据
-      const dateStr = date.toISOString().split('T')[0]
+      const year = date.getFullYear()
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const day = String(date.getDate()).padStart(2, '0')
+      const dateStr = `${year}-${month}-${day}`
       const count = dateCountMap[dateStr] || 0
       const level = getLevel(count)
       
@@ -244,8 +254,11 @@ Page({
           for (let j = 0; j < daysToAddAfter; j++) {
             const nextDate = new Date(lastDayOfMonth)
             nextDate.setDate(nextDate.getDate() + (j + 1))
+            const year = nextDate.getFullYear()
+            const month = String(nextDate.getMonth() + 1).padStart(2, '0')
+            const day = String(nextDate.getDate()).padStart(2, '0')
             currentWeek.push({
-              date: nextDate.toISOString().split('T')[0],
+              date: `${year}-${month}-${day}`,
               day: nextDate.getDate(),
               count: 0,
               level: -1
@@ -382,17 +395,35 @@ Page({
     return titleMap[type] || '其他'
   },
 
-  /**
-   * 热力图单元格点击事件
-   */
-  onCellTap(e) {
-    const { date, count } = e.currentTarget.dataset
-    if (count > 0) {
-      this.setData({
-        activeCell: this.data.activeCell === date ? null : date
-      })
-    }
-  },
+        /**
+         * 热力图单元格点击事件
+         */
+        onCellTap(e) {
+          const { date } = e.currentTarget.dataset
+          if (!date) return
+          
+          // 如果点击的是当前已激活的单元格，则取消激活
+          if (this.data.activeCell === date) {
+            this.setData({
+              activeCell: null
+            })
+          } else {
+            // 否则激活当前点击的单元格
+            this.setData({
+              activeCell: date
+            })
+          }
+        },
+      
+        /**
+         * 区块点击事件（点击其他地方隐藏提示）
+         */
+        onSectionTap(e) {
+          // 点击区块其他地方时隐藏提示
+          this.setData({
+            activeCell: null
+          })
+        },
 
   /**
    * 点击总植物数跳转到首页
