@@ -209,7 +209,14 @@ Page({
     
     // 在前面补全空单元格（非本月日期，level设为-1表示不显示颜色）
     for (let i = 0; i < daysToAddBefore; i++) {
-      currentWeek.push({ date: '', count: 0, level: -1 })
+      const prevDate = new Date(firstDayOfMonth)
+      prevDate.setDate(prevDate.getDate() - (daysToAddBefore - i))
+      currentWeek.push({
+        date: prevDate.toISOString().split('T')[0],
+        day: prevDate.getDate(),
+        count: 0,
+        level: -1
+      })
     }
     
     // 添加本月的日期
@@ -235,7 +242,14 @@ Page({
         if (currentWeek.length < 7) {
           const daysToAddAfter = 7 - currentWeek.length
           for (let j = 0; j < daysToAddAfter; j++) {
-            currentWeek.push({ date: '', count: 0, level: -1 })
+            const nextDate = new Date(lastDayOfMonth)
+            nextDate.setDate(nextDate.getDate() + (j + 1))
+            currentWeek.push({
+              date: nextDate.toISOString().split('T')[0],
+              day: nextDate.getDate(),
+              count: 0,
+              level: -1
+            })
           }
         }
         calendarData.push({

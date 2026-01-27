@@ -361,6 +361,14 @@
   font-weight: 500;
 }
 
+/* level 2-4 的热力点数字使用白色，提高对比度 */
+.calendar-cell.level-2 .cell-date,
+.calendar-cell.level-3 .cell-date,
+.calendar-cell.level-4 .cell-date {
+  color: #fff;
+  font-weight: 600;
+}
+
 .calendar-cell.level-0 {
   background-color: #ebedf0;
 }
