@@ -48,20 +48,48 @@
     </view>
   </view>
 
-  <!-- 每日趋势 -->
+  <!-- 每月趋势 - GitHub风格热力图 -->
   <view class="section">
-    <view class="section-header" bindtap="onToggleTrend">
-      <view class="section-title">每日趋势</view>
-      <view class="toggle-text">{{showFullTrend ? '收起' : '展开'}}</view>
-    </view>
-    <view class="daily-trend">
-      <view class="trend-item" wx:for="{{dailyTrend}}" wx:key="date">
-        <view class="trend-date">{{item.label}}</view>
-        <view class="trend-bar">
-          <view class="trend-fill" style="width: {{item.percent}}%"></view>
-        </view>
-        <view class="trend-count">{{item.count}}</view>
+    <view class="section-header">
+      <view class="section-title">每月趋势</view>
+      <view class="heatmap-legend">
+        <view class="legend-item">少</view>
+        <view class="legend-box level-0"></view>
+        <view class="legend-box level-1"></view>
+        <view class="legend-box level-2"></view>
+        <view class="legend-box level-3"></view>
+        <view class="legend-box level-4"></view>
+        <view class="legend-item">多</view>
       </view>
+    </view>
+    <view class="calendar-heatmap">
+      <view class="weekday-labels">
+        <view class="weekday-label">一</view>
+        <view class="weekday-label">二</view>
+        <view class="weekday-label">三</view>
+        <view class="weekday-label">四</view>
+        <view class="weekday-label">五</view>
+        <view class="weekday-label">六</view>
+        <view class="weekday-label">日</view>
+      </view>
+      <view class="calendar-grid">
+        <view class="calendar-row" wx:for="{{calendarData}}" wx:key="weekIndex">
+          <view
+            class="calendar-cell {{cell.level >= 0 ? 'level-' + cell.level : ''}} {{activeCell === cell.date ? 'active' : ''}}"
+            wx:for="{{item.cells}}"
+            wx:for-item="cell"
+            wx:key="date"
+            bindtap="onCellTap"
+            data-date="{{cell.date}}"
+            data-count="{{cell.count}}"
+          >
+            <view class="cell-tooltip" wx:if="{{activeCell === cell.date && cell.count > 0}}">{{cell.date}} {{cell.count}}次记录</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="heatmap-summary">
+      <view class="summary-text">本月共记录 <text class="summary-count">{{totalRecords}}</text> 次</view>
     </view>
   </view>
 </view>

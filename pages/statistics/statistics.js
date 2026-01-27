@@ -11,7 +11,10 @@ Page({
     dailyTrend: [],
     plantStatus: [],
     activePlants: [],
-    showFullTrend: false
+    showFullTrend: false,
+    calendarData: [],
+    totalRecords: 0,
+    activeCell: null
   },
 
   onLoad() {
@@ -102,14 +105,14 @@ Page({
       recordStats: recordStats
     })
 
-    // 每日记录趋势（默认显示最近7天的记录）
-    const thirtyDaysAgo = new Date(now)
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+    // 每月记录趋势（GitHub风格热力图）
+    const oneYearAgo = new Date(now)
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1)
     const allRecentRecords = records.filter(record => {
       const recordTime = new Date(record.recordTime)
-      return recordTime >= thirtyDaysAgo && recordTime <= now
+      return recordTime >= oneYearAgo && recordTime <= now
     })
-    this.loadDailyTrend(allRecentRecords, 7)
+    this.loadHeatmapData(allRecentRecords)
   },
 
   /**
@@ -156,6 +159,101 @@ Page({
 
     this.setData({
       dailyTrend: dailyTrend
+    })
+  },
+
+  /**
+   * 加载日历热力图数据（GitHub风格）
+   */
+  loadHeatmapData(records) {
+    const now = new Date()
+    const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+    const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0)
+    
+    // 创建日期到记录数的映射
+    const dateCountMap = {}
+    records.forEach(record => {
+      const recordDate = new Date(record.recordTime).toISOString().split('T')[0]
+      dateCountMap[recordDate] = (dateCountMap[recordDate] || 0) + 1
+    })
+
+    // 计算最大记录数用于颜色分级
+    const maxCount = Math.max(...Object.values(dateCountMap), 1)
+    
+    // GitHub风格的5级颜色算法
+    const getLevel = (count) => {
+      if (count === 0) return 0
+      if (count <= maxCount * 0.25) return 1
+      if (count <= maxCount * 0.5) return 2
+      if (count <= maxCount * 0.75) return 3
+      return 4
+    }
+
+    // 生成本月的所有日期
+    const monthDates = []
+    const currentDate = new Date(firstDayOfMonth)
+    
+    while (currentDate <= lastDayOfMonth) {
+      monthDates.push(new Date(currentDate))
+      currentDate.setDate(currentDate.getDate() + 1)
+    }
+
+    // 按周分组，每周起始为星期一
+    const calendarData = []
+    let currentWeek = []
+    let weekIndex = 0
+    
+    // 计算第一周需要补全的天数（从周一开始）
+    const firstDayOfWeek = firstDayOfMonth.getDay()
+    const daysToAddBefore = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1
+    
+    // 在前面补全空单元格（非本月日期，level设为-1表示不显示颜色）
+    for (let i = 0; i < daysToAddBefore; i++) {
+      currentWeek.push({ date: '', count: 0, level: -1 })
+    }
+    
+    // 添加本月的日期
+    for (let i = 0; i < monthDates.length; i++) {
+      const date = monthDates[i]
+      const dayOfWeek = date.getDay()
+      
+      // 将日期转换为热力图单元格数据
+      const dateStr = date.toISOString().split('T')[0]
+      const count = dateCountMap[dateStr] || 0
+      const level = getLevel(count)
+      
+      currentWeek.push({
+        date: dateStr,
+        count: count,
+        level: level
+      })
+      
+      // 如果是周日或者最后一天，结束当前周
+      if (dayOfWeek === 0 || i === monthDates.length - 1) {
+        // 如果不是完整的一周，在后面补全空单元格（非本月日期，level设为-1表示不显示颜色）
+        if (currentWeek.length < 7) {
+          const daysToAddAfter = 7 - currentWeek.length
+          for (let j = 0; j < daysToAddAfter; j++) {
+            currentWeek.push({ date: '', count: 0, level: -1 })
+          }
+        }
+        calendarData.push({
+          weekIndex: weekIndex++,
+          cells: currentWeek
+        })
+        currentWeek = []
+      }
+    }
+
+    // 计算本月总记录数
+    const monthRecords = records.filter(record => {
+      const recordTime = new Date(record.recordTime)
+      return recordTime >= firstDayOfMonth && recordTime <= lastDayOfMonth
+    })
+
+    this.setData({
+      calendarData: calendarData,
+      totalRecords: monthRecords.length
     })
   },
 
@@ -242,33 +340,6 @@ Page({
     })
   },
 
-  /**
-   * 切换每日趋势显示
-   */
-  onToggleTrend() {
-    const showFullTrend = !this.data.showFullTrend
-    
-    // 重新加载趋势数据
-    const records = require('../../utils/storage.js').getRecords()
-    const now = new Date()
-    const thirtyDaysAgo = new Date(now)
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
-    const allRecentRecords = records.filter(record => {
-      const recordTime = new Date(record.recordTime)
-      return recordTime >= thirtyDaysAgo && recordTime <= now
-    })
-    
-    // 根据展开状态加载不同天数的数据
-    if (showFullTrend) {
-      this.loadDailyTrend(allRecentRecords, 30)
-    } else {
-      this.loadDailyTrend(allRecentRecords, 7)
-    }
-    
-    this.setData({
-      showFullTrend: showFullTrend
-    })
-  },
 
   /**
    * 格式化状态
@@ -294,6 +365,18 @@ Page({
       'photo': '拍照'
     }
     return titleMap[type] || '其他'
+  },
+
+  /**
+   * 热力图单元格点击事件
+   */
+  onCellTap(e) {
+    const { date, count } = e.currentTarget.dataset
+    if (count > 0) {
+      this.setData({
+        activeCell: this.data.activeCell === date ? null : date
+      })
+    }
   },
 
   /**
