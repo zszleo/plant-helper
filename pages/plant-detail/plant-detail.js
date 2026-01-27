@@ -150,13 +150,16 @@ Page({
    * 删除植物
    */
   onDelete() {
+    console.log('准备删除植物，plantId:', this.data.plantId)
     wx.showModal({
       title: '确认删除',
       content: `确定要删除"${this.data.plant.name}"吗？此操作不可恢复，相关的生长记录也将被删除。`,
       confirmColor: '#F44336',
       success: (res) => {
         if (res.confirm) {
+          console.log('用户确认删除')
           const success = storage.deletePlant(this.data.plantId)
+          console.log('删除结果:', success)
           if (success) {
             wx.showToast({
               title: '删除成功',

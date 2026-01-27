@@ -33,7 +33,9 @@ class StorageService {
    */
   set(key, value) {
     try {
+      console.log('设置存储，key:', key, 'value:', value)
       wx.setStorageSync(key, value)
+      console.log('存储设置成功')
       return true
     } catch (error) {
       console.error('Storage set error:', error)
@@ -144,19 +146,67 @@ class StorageService {
     return false
   }
 
-  /**
-   * 删除植物
-   * @param {string} plantId 植物ID
-   * @returns {boolean} 是否成功
-   */
-  deletePlant(plantId) {
-    const plants = this.getPlants()
-    const filteredPlants = plants.filter(p => p._id !== plantId)
-    if (filteredPlants.length !== plants.length) {
-      return this.setPlants(filteredPlants)
+    /**
+     * 删除植物
+     * @param {string} plantId 植物ID
+     * @returns {boolean} 是否成功
+     */
+    deletePlant(plantId) {
+      console.log('========== 开始删除植物 ==========')
+      console.log('plantId:', plantId)
+      
+      const plants = this.getPlants()
+      console.log('当前植物数量:', plants.length)
+      
+      const filteredPlants = plants.filter(p => p._id !== plantId)
+      console.log('过滤后植物数量:', filteredPlants.length)
+      
+      if (filteredPlants.length !== plants.length) {
+        console.log('找到并删除植物')
+        
+        // 删除植物相关的生长记录
+        const records = this.getRecords()
+        console.log('删除前记录数量:', records.length)
+        console.log('记录详情:', JSON.stringify(records))
+        
+        const filteredRecords = records.filter(r => r.plantId !== plantId)
+        console.log('删除后记录数量:', filteredRecords.length)
+        console.log('过滤后记录详情:', JSON.stringify(filteredRecords))
+        
+        const recordsDeleted = this.setRecords(filteredRecords)
+        console.log('删除记录结果:', recordsDeleted)
+        
+        // 验证记录是否真的被删除
+        const verifyRecords = this.getRecords()
+        console.log('验证记录数量:', verifyRecords.length)
+        
+        // 删除植物相关的提醒
+        const reminders = this.getReminders()
+        console.log('删除前提醒数量:', reminders.length)
+        
+        const filteredReminders = reminders.filter(r => r.plantId !== plantId)
+        console.log('删除后提醒数量:', filteredReminders.length)
+        
+        const remindersDeleted = this.setReminders(filteredReminders)
+        console.log('删除提醒结果:', remindersDeleted)
+        
+        const plantsDeleted = this.setPlants(filteredPlants)
+        console.log('删除植物结果:', plantsDeleted)
+        
+        // 验证植物是否真的被删除
+        const verifyPlants = this.getPlants()
+        console.log('验证植物数量:', verifyPlants.length)
+        
+        console.log('========== 删除完成 ==========')
+        
+        // 只有所有操作都成功才返回 true
+        return recordsDeleted && remindersDeleted && plantsDeleted
+      }
+      
+      console.log('未找到要删除的植物')
+      console.log('========== 删除失败 ==========')
+      return false
     }
-    return false
-  }
 
   /**
    * 获取单个植物
@@ -348,6 +398,33 @@ class StorageService {
    */
   clearOfflineQueue() {
     return this.set(STORAGE_KEYS.OFFLINE_QUEUE, [])
+  }
+
+  /**
+   * 清理无效数据（删除没有对应植物的记录和提醒）
+   * @returns {boolean} 是否成功
+   */
+  cleanupInvalidData() {
+    console.log('========== 开始清理无效数据 ==========')
+    const plants = this.getPlants()
+    const plantIds = plants.map(p => p._id)
+    
+    // 清理无效记录
+    const records = this.getRecords()
+    console.log('清理前记录数量:', records.length)
+    const validRecords = records.filter(r => plantIds.includes(r.plantId))
+    console.log('清理后记录数量:', validRecords.length)
+    const recordsCleaned = this.setRecords(validRecords)
+    
+    // 清理无效提醒
+    const reminders = this.getReminders()
+    console.log('清理前提醒数量:', reminders.length)
+    const validReminders = reminders.filter(r => plantIds.includes(r.plantId))
+    console.log('清理后提醒数量:', validReminders.length)
+    const remindersCleaned = this.setReminders(validReminders)
+    
+    console.log('========== 清理完成 ==========')
+    return recordsCleaned && remindersCleaned
   }
 
   /**

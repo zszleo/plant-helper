@@ -16,6 +16,7 @@ Page({
   },
 
   onShow() {
+    console.log('记录页面 onShow，重新加载数据')
     this.loadPlants()
     this.loadRecords()
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
@@ -53,14 +54,19 @@ Page({
     const records = storage.getRecords()
     const plants = this.data.plants
 
-    // 为每条记录添加植物名称
-    const recordsWithPlantName = records.map(record => {
-      const plant = plants.find(p => p._id === record.plantId)
-      return {
-        ...record,
-        plantName: plant ? plant.name : '未知植物'
-      }
-    })
+    // 过滤掉没有对应植物的记录，并为每条记录添加植物名称
+    const recordsWithPlantName = records
+      .filter(record => {
+        const plant = plants.find(p => p._id === record.plantId)
+        return plant !== undefined
+      })
+      .map(record => {
+        const plant = plants.find(p => p._id === record.plantId)
+        return {
+          ...record,
+          plantName: plant ? plant.name : '未知植物'
+        }
+      })
 
     // 按时间倒序排列
     recordsWithPlantName.sort((a, b) => new Date(b.recordTime) - new Date(a.recordTime))

@@ -22,6 +22,7 @@ Page({
   },
 
   onShow() {
+    console.log('统计页面 onShow，重新加载数据')
     this.loadStatistics()
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({
@@ -40,30 +41,39 @@ Page({
     }, 1000)
   },
 
-  /**
-   * 加载统计数据
-   */
-  loadStatistics() {
-    const plants = storage.getPlants()
-    const records = storage.getRecords()
-    const reminders = storage.getReminders()
-
-    // 基础统计
-    this.setData({
-      plantCount: plants.length,
-      recordCount: records.length,
-      reminderCount: reminders.length
-    })
-
-    // 记录统计
-    this.loadRecordStats(records)
-    
-    // 植物状态统计
-    this.loadPlantStatus(plants)
-    
-    // 活跃植物排行
-    this.loadActivePlants(plants, records)
-  },
+    /**
+     * 加载统计数据
+     */
+    loadStatistics() {
+      const plants = storage.getPlants()
+      const allRecords = storage.getRecords()
+      const allReminders = storage.getReminders()
+  
+      // 过滤掉没有对应植物的记录和提醒
+      const validRecords = allRecords.filter(record => {
+        return plants.some(plant => plant._id === record.plantId)
+      })
+  
+      const validReminders = allReminders.filter(reminder => {
+        return plants.some(plant => plant._id === reminder.plantId)
+      })
+  
+      // 基础统计
+      this.setData({
+        plantCount: plants.length,
+        recordCount: validRecords.length,
+        reminderCount: validReminders.length
+      })
+  
+      // 记录统计
+      this.loadRecordStats(validRecords)
+      
+      // 植物状态统计
+      this.loadPlantStatus(plants)
+      
+      // 活跃植物排行
+      this.loadActivePlants(plants, validRecords)
+    },
 
   /**
    * 加载记录统计
