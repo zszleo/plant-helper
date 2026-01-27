@@ -224,6 +224,7 @@ Page({
       
       currentWeek.push({
         date: dateStr,
+        day: date.getDate(),
         count: count,
         level: level
       })

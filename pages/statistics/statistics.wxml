@@ -83,6 +83,7 @@
             data-date="{{cell.date}}"
             data-count="{{cell.count}}"
           >
+            <view class="cell-date">{{cell.day}}</view>
             <view class="cell-tooltip" wx:if="{{activeCell === cell.date && cell.count > 0}}">{{cell.date}} {{cell.count}}次记录</view>
           </view>
         </view>
