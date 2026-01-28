@@ -1,0 +1,82 @@
+## 列表项卡片样式名称汇总
+
+### 1. **植物卡片** (pages/index/index.wxml)
+- `plant-card` - 植物列表卡片主容器
+- `plant-image` - 植物图片
+- `plant-info` - 植物信息容器
+- `plant-name` - 植物名称
+- `plant-status` - 植物状态
+- `plant-description` - 植物描述
+- `plant-actions` - 植物操作按钮区域
+
+### 2. **记录卡片** (pages/records/records.wxml, pages/plant-detail/plant-detail.wxml)
+- `record-card` - 记录卡片主容器
+- `card-header` - 卡片头部
+- `card-icon-wrapper` - 图标包装器
+- `card-icon` - 卡片图标
+- `card-icon-placeholder` - 图标占位符
+- `placeholder-icon` - 占位符图标
+- `card-title-wrapper` - 标题包装器
+- `card-title` - 卡片标题
+- `card-subtitle` - 卡片副标题
+- `card-time` - 卡片时间
+- `card-arrow` - 卡片箭头
+- `card-note` - 卡片备注
+- `note-text` - 备注文本
+- `record-type` - 记录类型
+- `dot` - 分隔点
+
+### 3. **提醒卡片** (pages/reminders/reminders.wxml)
+- `reminder-card` - 提醒卡片主容器
+- `reminder-header` - 提醒头部
+- `reminder-info` - 提醒信息
+- `reminder-icon-wrapper` - 提醒图标包装器
+- `reminder-icon` - 提醒图标
+- `reminder-text` - 提醒文本
+- `reminder-details` - 提醒详情
+- `detail-item` - 详情项
+- `detail-icon` - 详情图标
+- `detail-text` - 详情文本
+- `reminder-actions` - 提醒操作
+- `action-btn` - 操作按钮
+- `action-icon` - 操作图标
+- `action-text` - 操作文本
+
+### 4. **状态卡片** (pages/statistics/statistics.wxml)
+- `status-card` - 状态卡片主容器
+- `status-card-header` - 状态卡片头部
+- `status-icon` - 状态图标
+- `status-info` - 状态信息
+- `status-name` - 状态名称
+- `status-stats` - 状态统计
+- `status-count` - 状态数量
+- `status-progress` - 状态进度条
+- `progress-bar` - 进度条
+- `progress-fill` - 进度填充
+- `progress-text` - 进度文本
+
+### 5. **统计项卡片** (pages/statistics/statistics.wxml)
+- `summary-item` - 汇总项
+- `summary-value` - 汇总值
+- `summary-label` - 汇总标签
+- `type-item` - 类型项
+- `type-item-header` - 类型项头部
+- `type-icon` - 类型图标
+- `type-info` - 类型信息
+- `type-name` - 类型名称
+- `type-stats` - 类型统计
+- `type-count` - 类型数量
+- `type-progress` - 类型进度
+- `legend-item` - 图例项
+- `legend-box` - 图例框
+
+### 6. **其他列表项样式**
+- `filter-item` - 筛选项
+- `stat-item` - 统计项
+- `info-item` - 信息项
+- `info-label` - 信息标签
+- `info-value` - 信息值
+- `form-item` - 表单项
+- `tab-bar-item` - 标签栏项
+
+这些样式名称涵盖了项目中所有主要的列表项卡片组件，包括植物列表、记录列表、提醒列表、统计卡片等。
