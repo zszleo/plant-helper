@@ -13,7 +13,9 @@ Page({
     },
     // 触摸滑动相关
     touchStartX: 0,
-    touchStartY: 0
+    touchStartY: 0,
+    // 页面动画类
+    pageAnimationClass: ''
   },
 
   onLoad() {
@@ -25,6 +27,10 @@ Page({
     this.loadPlants()
     this.loadSyncState()
     this.scrollToTop()
+    // 重置动画类
+    this.setData({
+      pageAnimationClass: ''
+    })
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({
         selected: 0
@@ -273,9 +279,17 @@ Page({
          * 切换到下一个tab
          */
         switchToNextTab() {
-          wx.switchTab({
-            url: '/pages/records/records'
+          // 添加向左滑动的动画
+          this.setData({
+            pageAnimationClass: 'page-slide-left'
           })
+          
+          // 延迟切换页面，让动画播放
+          setTimeout(() => {
+            wx.switchTab({
+              url: '/pages/records/records'
+            })
+          }, 500)
         },
 
         /**

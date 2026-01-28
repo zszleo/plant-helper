@@ -19,7 +19,8 @@ Page({
     currentMonth: new Date().getMonth() + 1,
     // 触摸滑动相关
     touchStartX: 0,
-    touchStartY: 0
+    touchStartY: 0,
+    pageAnimationClass: ''
   },
 
   onLoad() {
@@ -29,6 +30,10 @@ Page({
   onShow() {
     console.log('统计页面 onShow，重新加载数据')
     this.loadStatistics()
+    // 重置动画类
+    this.setData({
+      pageAnimationClass: ''
+    })
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({
         selected: 3
@@ -665,8 +670,13 @@ Page({
    * 切换到上一个tab
    */
   switchToPrevTab() {
-    wx.switchTab({
-      url: '/pages/reminders/reminders'
+    this.setData({
+      pageAnimationClass: 'page-slide-right'
     })
+    setTimeout(() => {
+      wx.switchTab({
+        url: '/pages/reminders/reminders'
+      })
+    }, 500)
   }
 })
