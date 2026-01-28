@@ -34,7 +34,7 @@ module.exports = {
   </view>
 </view>
 
-<view class="container {{pageAnimationClass}}" id="pageContainer" scroll-top="{{scrollTop}}" bindtouchstart="onTouchStart" bindtouchend="onTouchEnd">
+<scroll-view class="container {{pageAnimationClass}}" id="pageContainer" scroll-y="{{true}}" show-scrollbar="{{true}}" bindtouchstart="onTouchStart" bindtouchend="onTouchEnd" bindscrolltolower="onReachBottom">
   <!-- 植物列表 -->
   <view class="plant-list">
     <view class="plant-card" wx:for="{{filteredPlants}}" wx:key="_id" bindtap="onPlantDetail" data-id="{{item._id}}">
@@ -57,6 +57,12 @@ module.exports = {
       </view>
     </view>
 
+    <!-- 加载更多提示 -->
+    <view class="load-more" wx:if="{{filteredPlants.length > 0}}">
+      <text class="load-more-text" wx:if="{{isLoading}}">加载中...</text>
+      <text class="load-more-text" wx:elif="{{!hasMore}}">没有更多了</text>
+    </view>
+
     <!-- 空状态 -->
     <view class="empty-state" wx:if="{{filteredPlants.length === 0}}">
       <image class="empty-icon" src="/images/empty-plants.svg" mode="aspectFit"></image>
@@ -69,4 +75,4 @@ module.exports = {
   <view class="add-btn" bindtap="onAddPlant">
     <image class="add-icon" src="/images/add.svg" mode="aspectFit"></image>
   </view>
-</view>
+</scroll-view>

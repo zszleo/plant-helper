@@ -15,7 +15,12 @@ Page({
     touchStartX: 0,
     touchStartY: 0,
     // 页面动画类
-    pageAnimationClass: ''
+    pageAnimationClass: '',
+    // 分页相关
+    currentPage: 1,
+    pageSize: 10,
+    hasMore: true,
+    isLoading: false
   },
 
   onLoad() {
@@ -52,18 +57,78 @@ Page({
   /**
    * 加载植物列表
    */
-  loadPlants() {
+  loadPlants(reset = true) {
     const plants = storage.getPlants()
+    
     // 为每个植物添加记录数量
     const plantsWithCount = plants.map(plant => {
       const recordCount = this.getRecordCount(plant._id)
       const plantWithCount = { ...plant, recordCount: recordCount || 0 }
       return plantWithCount
     })
+    
+    if (reset) {
+      this.setData({
+        plants: plantsWithCount,
+        filteredPlants: [],  // 清空，等待加载第一页
+        currentPage: 1,
+        hasMore: plantsWithCount.length > this.data.pageSize
+      })
+      
+      // 如果有数据，直接加载第一页
+      if (plantsWithCount.length > 0) {
+        this.loadMorePlants()
+      } else {
+        // 没有数据时，保持 filteredPlants 为空
+        this.setData({
+          filteredPlants: []
+        })
+      }
+    } else {
+      this.setData({
+        plants: plantsWithCount
+      })
+      this.filterPlants(this.data.searchKeyword)
+    }
+  },
+
+  /**
+   * 加载更多植物
+   */
+  loadMorePlants() {
+    // 如果正在加载，跳过
+    if (this.data.isLoading) {
+      return
+    }
+
+    // 如果已经加载了所有数据，跳过
+    if (this.data.filteredPlants.length >= this.data.plants.length) {
+      return
+    }
+
+    this.setData({ isLoading: true })
+
+    const startIndex = (this.data.currentPage - 1) * this.data.pageSize
+    const endIndex = this.data.currentPage * this.data.pageSize
+    const morePlants = this.data.plants.slice(startIndex, endIndex)
+
+    const newFilteredPlants = [...this.data.filteredPlants, ...morePlants]
+    const newCurrentPage = this.data.currentPage + 1
+    const newHasMore = endIndex < this.data.plants.length
+
     this.setData({
-      plants: plantsWithCount,
-      filteredPlants: plantsWithCount
+      filteredPlants: newFilteredPlants,
+      currentPage: newCurrentPage,
+      hasMore: newHasMore,
+      isLoading: false
     })
+  },
+
+  /**
+   * 触底加载更多
+   */
+  onReachBottom() {
+    this.loadMorePlants()
   },
 
   /**
@@ -98,20 +163,27 @@ Page({
    * 筛选植物
    */
   filterPlants(keyword) {
+    let filtered = this.data.plants
+    
     if (!keyword) {
-      this.setData({
-        filteredPlants: this.data.plants
-      })
-      return
+      filtered = this.data.plants
+    } else {
+      filtered = this.data.plants.filter(plant =>
+        plant.name.toLowerCase().includes(keyword.toLowerCase()) ||
+        plant.type.toLowerCase().includes(keyword.toLowerCase())
+      )
     }
 
-    const filtered = this.data.plants.filter(plant => 
-      plant.name.toLowerCase().includes(keyword.toLowerCase()) ||
-      plant.type.toLowerCase().includes(keyword.toLowerCase())
-    )
-
+    // 重置分页状态
     this.setData({
-      filteredPlants: filtered
+      currentPage: 1,
+      hasMore: filtered.length > this.data.pageSize
+    })
+
+    // 加载第一页数据
+    const firstPage = filtered.slice(0, this.data.pageSize)
+    this.setData({
+      filteredPlants: firstPage
     })
   },
 
@@ -183,7 +255,7 @@ Page({
               title: '删除成功',
               icon: 'success'
             })
-            this.loadPlants()
+            this.loadPlants(true)
           } else {
             wx.showToast({
               title: '删除失败',

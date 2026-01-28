@@ -2,6 +2,7 @@
   "usingComponents": {},
   "navigationBarTitleText": "我的植物",
   "enablePullDownRefresh": true,
+  "onReachBottomDistance": 50,
   "backgroundColor": "#f5f5f5",
   "backgroundTextStyle": "dark"
 }

@@ -1,7 +1,6 @@
 <!--pages/reminders/reminders.wxml-->
-<view class="container {{pageAnimationClass}}" bindtouchstart="onTouchStart" bindtouchend="onTouchEnd">
-  <!-- 统计栏 -->
-  <view class="stats-bar">
+<!-- 统计栏 -->
+<view class="stats-bar">
     <view class="stat-item">
       <text class="stat-value">{{totalCount}}</text>
       <text class="stat-label">全部</text>
@@ -11,8 +10,9 @@
       <text class="stat-value active">{{activeCount}}</text>
       <text class="stat-label">活跃</text>
     </view>
-  </view>
+</view>
 
+<view class="container {{pageAnimationClass}}" bindtouchstart="onTouchStart" bindtouchend="onTouchEnd">
   <!-- 提醒列表 -->
   <view class="reminders-list">
     <view class="reminder-card" wx:for="{{reminders}}" wx:key="_id">

@@ -23,7 +23,14 @@
   left: 0;
   right: 0;
   background: #f5f5f5;
-  overflow-y: auto;
+  height: calc(100vh - 240rpx);
+  border: none;
+}
+
+/* 隐藏 scroll-view 的默认边框 */
+.container::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
 /* 页面滑动动画 */
@@ -137,6 +144,7 @@
   background: #f5f5f5;
   border-radius: 16rpx 16rpx 0 0;
   box-shadow: 0 -2rpx 8rpx rgba(0, 0, 0, 0.05);
+  min-height: calc(100vh - 240rpx);
 }
 
 .plant-card {
@@ -264,6 +272,39 @@
 .empty-hint {
   font-size: 28rpx;
   color: #999;
+}
+
+/* 加载更多 */
+.load-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30rpx 0;
+}
+
+.load-more-text {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 测试按钮 */
+.test-btn {
+  position: fixed;
+  right: 30rpx;
+  bottom: 320rpx;
+  width: 100rpx;
+  height: 100rpx;
+  background: linear-gradient(135deg, #FF9800, #FF5722);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 16rpx rgba(255, 152, 0, 0.4);
+  z-index: 100;
+}
+
+.test-icon {
+  font-size: 48rpx;
 }
 
 /* 添加按钮 */

@@ -1,8 +1,12 @@
 /* pages/reminders/reminders.wxss */
 .container {
-  min-height: 100vh;
+  position: absolute;
+  top: 120rpx;
+  bottom: 120rpx;
+  left: 0;
+  right: 0;
   background: #f5f5f5;
-  padding-bottom: 120rpx;
+  overflow-y: auto;
 }
 
 /* 页面滑动动画 */
@@ -42,9 +46,15 @@
   align-items: center;
   justify-content: center;
   background: #ffffff;
-  padding: 30rpx;
-  margin-bottom: 20rpx;
+  padding: 20rpx 30rpx;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+  height: 120rpx;
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
 }
 
 .stat-item {

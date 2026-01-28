@@ -6,13 +6,19 @@ Page({
     records: [],
     plants: [],
     filteredRecords: [],
+    allFilteredRecords: [],  // 保存所有筛选后的数据，用于分页
     groupedRecords: [],
     selectedType: '',
     // 触摸滑动相关
     touchStartX: 0,
     touchStartY: 0,
     // 页面动画类
-    pageAnimationClass: ''
+    pageAnimationClass: '',
+    // 分页相关
+    currentPage: 1,
+    pageSize: 20,
+    hasMore: true,
+    isLoading: false
   },
 
   onLoad() {
@@ -21,7 +27,6 @@ Page({
   },
 
   onShow() {
-    console.log('记录页面 onShow，重新加载数据')
     this.loadPlants()
     this.loadRecords()
     // 重置动画类
@@ -59,7 +64,7 @@ Page({
   /**
    * 加载记录列表
    */
-  loadRecords() {
+  loadRecords(reset = true) {
     const records = storage.getRecords()
     const plants = this.data.plants
 
@@ -85,7 +90,54 @@ Page({
       records: recordsWithPlantName
     })
 
+    if (reset) {
+      this.setData({
+        currentPage: 1,
+        hasMore: recordsWithPlantName.length > this.data.pageSize,
+        filteredRecords: [],  // 清空，等待加载第一页
+        allFilteredRecords: recordsWithPlantName  // 保存所有筛选后的数据
+      })
+    }
+
     this.filterRecords()
+  },
+
+  /**
+   * 加载更多记录
+   */
+  loadMoreRecords() {
+    if (this.data.isLoading || !this.data.hasMore) {
+      return
+    }
+
+    this.setData({ isLoading: true })
+
+    // 从所有筛选后的数据中切片
+    const startIndex = (this.data.currentPage - 1) * this.data.pageSize
+    const endIndex = this.data.currentPage * this.data.pageSize
+    const moreRecords = this.data.allFilteredRecords.slice(startIndex, endIndex)
+
+    // 追加新数据到现有数据
+    const allRecords = [...this.data.filteredRecords, ...moreRecords]
+    this.setData({
+      filteredRecords: allRecords
+    })
+
+    // 重新分组所有数据
+    this.groupRecordsByDate(allRecords)
+
+    this.setData({
+      currentPage: this.data.currentPage + 1,
+      hasMore: endIndex < this.data.allFilteredRecords.length,
+      isLoading: false
+    })
+  },
+
+  /**
+   * 触底加载更多
+   */
+  onReachBottom() {
+    this.loadMoreRecords()
   },
 
   /**
@@ -98,22 +150,39 @@ Page({
       filtered = filtered.filter(record => record.type === this.data.selectedType)
     }
 
+    // 保存所有筛选后的数据
     this.setData({
-      filteredRecords: filtered
+      allFilteredRecords: filtered
     })
 
-    this.groupRecordsByDate()
+    // 重置分页状态
+    this.setData({
+      currentPage: 1,
+      hasMore: filtered.length > this.data.pageSize,
+      filteredRecords: []  // 先清空
+    })
+
+    // 加载第一页数据
+    const firstPage = filtered.slice(0, this.data.pageSize)
+    
+    // 更新 filteredRecords 为第一页数据
+    this.setData({
+      filteredRecords: firstPage
+    })
+    
+    this.groupRecordsByDate(firstPage)
   },
 
   /**
    * 按日期分组记录
    */
-  groupRecordsByDate() {
+  groupRecordsByDate(recordsToGroup = null) {
+    const records = recordsToGroup || this.data.filteredRecords
     const grouped = {}
     const today = new Date()
     today.setHours(0, 0, 0, 0)
 
-    this.data.filteredRecords.forEach(record => {
+    records.forEach(record => {
       const recordDate = new Date(record.recordTime)
       recordDate.setHours(0, 0, 0, 0)
       
@@ -162,6 +231,11 @@ Page({
     const type = e.currentTarget.dataset.type
     this.setData({
       selectedType: type
+    })
+    // 重置分页状态
+    this.setData({
+      currentPage: 1,
+      hasMore: true
     })
     this.filterRecords()
   },

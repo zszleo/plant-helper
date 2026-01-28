@@ -1,7 +1,6 @@
 <!--pages/records/records.wxml-->
-<view class="container {{pageAnimationClass}}" bindtouchstart="onTouchStart" bindtouchend="onTouchEnd">
-  <!-- 筛选器 -->
-  <view class="filter-bar">
+<!-- 筛选器 -->
+<view class="filter-bar">
     <scroll-view class="filter-scroll" scroll-x="true" show-scrollbar="false">
       <view 
         class="filter-item {{selectedType === '' ? 'active' : ''}}" 
@@ -39,8 +38,9 @@
         照片
       </view>
     </scroll-view>
-  </view>
+</view>
 
+<scroll-view class="container {{pageAnimationClass}}" scroll-y="{{true}}" show-scrollbar="{{true}}" bindtouchstart="onTouchStart" bindtouchend="onTouchEnd" bindscrolltolower="onReachBottom">
   <!-- 记录列表 -->
   <view class="records-list">
     <view class="date-group" wx:for="{{groupedRecords}}" wx:key="date">
@@ -73,6 +73,12 @@
       </view>
     </view>
 
+    <!-- 加载更多提示 -->
+    <view class="load-more" wx:if="{{filteredRecords.length > 0}}">
+      <text class="load-more-text" wx:if="{{isLoading}}">加载中...</text>
+      <text class="load-more-text" wx:elif="{{!hasMore}}">没有更多了</text>
+    </view>
+
     <!-- 空状态 -->
     <view class="empty-state" wx:if="{{filteredRecords.length === 0}}">
       <image class="empty-icon" src="/images/empty-records.svg" mode="aspectFit"></image>
@@ -80,9 +86,9 @@
       <text class="empty-hint">点击下方按钮添加第一条记录</text>
     </view>
   </view>
+</scroll-view>
 
-  <!-- 添加按钮 -->
-  <view class="add-btn" bindtap="onAddRecord">
-    <image class="add-icon" src="/images/add.svg" mode="aspectFit"></image>
-  </view>
+<!-- 添加按钮 -->
+<view class="add-btn" bindtap="onAddRecord">
+  <image class="add-icon" src="/images/add.svg" mode="aspectFit"></image>
 </view>
