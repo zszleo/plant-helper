@@ -70,19 +70,24 @@ module.exports = {
     </view>
 
     <view class="records-list">
-      <view class="record-item" wx:for="{{recentRecords}}" wx:key="_id" bindtap="onRecordDetail" data-id="{{item._id}}">
-        <view class="record-icon-wrapper">
-          <image class="record-icon" src="{{getRecordIcon(item.type)}}" mode="aspectFit"></image>
+      <view class="record-card" wx:for="{{recentRecordsWithIcons}}" wx:key="_id" bindtap="onRecordDetail" data-id="{{item._id}}">
+        <view class="card-header">
+          <view class="card-icon-wrapper">
+            <image class="card-icon" src="{{item.recordIcon}}" mode="aspectFit"></image>
+          </view>
+          <view class="card-title-wrapper">
+            <text class="card-title">{{item.recordTitle}}</text>
+            <text class="card-time">{{item.formattedTime}}</text>
+          </view>
+          <image class="card-arrow" src="/images/arrow-right.svg" mode="aspectFit"></image>
         </view>
-        <view class="record-info">
-          <text class="record-title">{{getRecordTitle(item.type)}}</text>
-          <text class="record-time">{{formatTime(item.recordTime)}}</text>
+        <view class="card-note" wx:if="{{item.notes}}">
+          <text class="note-text">{{item.notes}}</text>
         </view>
-        <image class="record-arrow" src="/images/arrow-right.svg" mode="aspectFit"></image>
       </view>
 
       <!-- 空状态 -->
-      <view class="empty-records" wx:if="{{recentRecords.length === 0}}">
+      <view class="empty-records" wx:if="{{recentRecordsWithIcons.length === 0}}">
         <image class="empty-icon" src="/images/empty-records.svg" mode="aspectFit"></image>
         <text class="empty-text">还没有记录</text>
         <text class="empty-hint">点击上方按钮添加第一条记录</text>

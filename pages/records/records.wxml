@@ -50,15 +50,23 @@
       </view>
 
       <view class="record-card" wx:for="{{item.records}}" wx:for-item="record" wx:key="_id" bindtap="onRecordDetail" data-id="{{record._id}}">
-        <view class="record-icon-wrapper">
-          <image class="record-icon" src="{{getRecordIcon(record.type)}}" mode="aspectFit"></image>
+        <view class="card-header">
+          <view class="card-icon-wrapper">
+            <image class="card-icon" src="{{record.recordIcon}}" mode="aspectFit"></image>
+          </view>
+          <view class="card-title-wrapper">
+            <text class="card-title">{{record.plantName}}</text>
+            <view class="card-subtitle">
+              <text class="record-type">{{record.recordTitle}}</text>
+              <text class="dot">·</text>
+              <text class="record-time">{{record.formattedTime}}</text>
+            </view>
+          </view>
+          <image class="card-arrow" src="/images/arrow-right.svg" mode="aspectFit"></image>
         </view>
-        <view class="record-info">
-          <text class="record-title">{{getRecordTitle(record.type)}}</text>
-          <text class="record-plant">{{record.plantName}}</text>
-          <text class="record-time">{{formatTime(record.recordTime)}}</text>
+        <view class="card-note" wx:if="{{record.notes}}">
+          <text class="note-text">{{record.notes}}</text>
         </view>
-        <image class="record-arrow" src="/images/arrow-right.svg" mode="aspectFit"></image>
       </view>
     </view>
 

@@ -280,6 +280,16 @@ class StorageService {
   }
 
   /**
+   * 获取单个记录
+   * @param {string} recordId 记录ID
+   * @returns {object|null} 记录信息
+   */
+  getRecord(recordId) {
+    const records = this.getRecords()
+    return records.find(r => r._id === recordId) || null
+  }
+
+  /**
    * 获取指定植物的生长记录
    * @param {string} plantId 植物ID
    * @returns {array} 记录列表

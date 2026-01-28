@@ -8,7 +8,8 @@ Page({
     growthDays: 0,
     plantDays: 0,
     recordCount: 0,
-    recentRecords: []
+    recentRecords: [],
+    recentRecordsWithIcons: []
   },
 
   onLoad(options) {
@@ -89,8 +90,17 @@ Page({
       .sort((a, b) => new Date(b.recordTime) - new Date(a.recordTime))
       .slice(0, 5)
 
+    // 为每条记录添加图标、标题和格式化时间
+    const recordsWithIcons = sortedRecords.map(record => ({
+      ...record,
+      recordIcon: this.getRecordIcon(record.type),
+      recordTitle: this.getRecordTitle(record.type),
+      formattedTime: this.formatTime(record.recordTime)
+    }))
+
     this.setData({
-      recentRecords: sortedRecords
+      recentRecords: sortedRecords,
+      recentRecordsWithIcons: recordsWithIcons
     })
   },
 
@@ -118,10 +128,8 @@ Page({
    */
   onRecordDetail(e) {
     const recordId = e.currentTarget.dataset.id
-    // TODO: 跳转到记录详情页
-    wx.showToast({
-      title: '记录详情功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: `/pages/record-detail/record-detail?id=${recordId}`
     })
   },
 

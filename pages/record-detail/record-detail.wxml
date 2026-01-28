@@ -1,0 +1,74 @@
+<!--pages/record-detail/record-detail.wxml-->
+<view class="container" wx:if="{{record}}">
+  <!-- 记录类型图标 -->
+  <view class="header-section">
+    <view class="icon-wrapper">
+      <image class="record-icon" src="{{recordIcon}}" mode="aspectFit"></image>
+    </view>
+    <text class="record-type-title">{{recordTitle}}</text>
+  </view>
+
+  <!-- 记录信息 -->
+  <view class="info-section">
+    <view class="info-item">
+      <text class="info-label">记录植物</text>
+      <text class="info-value">{{record.plantName}}</text>
+    </view>
+
+    <view class="info-item">
+      <text class="info-label">记录类型</text>
+      <text class="info-value">{{recordTitle}}</text>
+    </view>
+
+    <view class="info-item">
+      <text class="info-label">记录时间</text>
+      <text class="info-value">{{formattedTime}}</text>
+    </view>
+
+    <view class="info-item">
+      <text class="info-label">记录备注</text>
+      <text class="info-value {{record.notes ? '' : 'empty-note'}}">{{record.notes || '当前记录没有备注哟~'}}</text>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-actions">
+    <view class="action-btn edit-note-btn" bindtap="onEditNote">
+      <image class="btn-icon" src="/images/edit.svg" mode="aspectFit"></image>
+      <text class="btn-text">修改备注</text>
+    </view>
+    <view class="action-btn delete-btn" bindtap="onDelete">
+      <image class="btn-icon" src="/images/delete.svg" mode="aspectFit"></image>
+      <text class="btn-text">删除</text>
+    </view>
+  </view>
+</view>
+
+<!-- 修改备注弹窗 -->
+<view class="modal-mask" wx:if="{{showNoteModal}}" bindtap="onCancelEditNote">
+  <view class="modal-content" catchtap="stopPropagation">
+    <view class="modal-header">
+      <text class="modal-title">修改备注</text>
+    </view>
+    <view class="modal-body">
+      <textarea
+        class="note-textarea"
+        placeholder="请输入备注内容"
+        value="{{noteText}}"
+        bindinput="onNoteInput"
+        maxlength="500"
+        auto-height
+      ></textarea>
+    </view>
+    <view class="modal-footer">
+      <view class="modal-btn cancel-btn" bindtap="onCancelEditNote">取消</view>
+      <view class="modal-btn save-btn" bindtap="onSaveNote">保存</view>
+    </view>
+  </view>
+</view>
+
+<!-- 加载状态 -->
+<view class="loading-container" wx:if="{{!record}}">
+  <view class="loading-spinner"></view>
+  <text class="loading-text">加载中...</text>
+</view>

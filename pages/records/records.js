@@ -126,7 +126,13 @@ Page({
       if (!grouped[dateKey]) {
         grouped[dateKey] = []
       }
-      grouped[dateKey].push(record)
+      // 为每条记录添加图标、标题和格式化时间
+      grouped[dateKey].push({
+        ...record,
+        recordIcon: this.getRecordIcon(record.type),
+        recordTitle: this.getRecordTitle(record.type),
+        formattedTime: this.formatTime(record.recordTime)
+      })
     })
 
     // 转换为数组格式
@@ -198,10 +204,8 @@ Page({
    */
   onRecordDetail(e) {
     const recordId = e.currentTarget.dataset.id
-    // TODO: 跳转到记录详情页
-    wx.showToast({
-      title: '记录详情功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: `/pages/record-detail/record-detail?id=${recordId}`
     })
   },
 

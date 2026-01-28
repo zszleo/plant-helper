@@ -6,7 +6,8 @@
     "pages/statistics/statistics",
     "pages/plant-detail/plant-detail",
     "pages/plant-add/plant-add",
-    "pages/record-add/record-add"
+    "pages/record-add/record-add",
+    "pages/record-detail/record-detail"
   ],
   "window": {
     "backgroundTextStyle": "light",
