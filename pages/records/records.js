@@ -169,24 +169,9 @@ Page({
       return
     }
 
-    // 如果只有一个植物，直接跳转到添加记录页面
-    if (this.data.plants.length === 1) {
-      wx.navigateTo({
-        url: `/pages/record-add/record-add?plantId=${this.data.plants[0]._id}`
-      })
-      return
-    }
-
-    // 多个植物，显示选择器
-    const plantNames = this.data.plants.map(p => p.name)
-    wx.showActionSheet({
-      itemList: plantNames,
-      success: (res) => {
-        const plantId = this.data.plants[res.tapIndex]._id
-        wx.navigateTo({
-          url: `/pages/record-add/record-add?plantId=${plantId}`
-        })
-      }
+    // 直接跳转到添加记录页面，不显示植物选择器
+    wx.navigateTo({
+      url: '/pages/record-add/record-add'
     })
   },
 
