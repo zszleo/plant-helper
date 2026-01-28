@@ -33,8 +33,10 @@ Page({
     const year = today.getFullYear()
     const month = String(today.getMonth() + 1).padStart(2, '0')
     const day = String(today.getDate()).padStart(2, '0')
+    const todayStr = `${year}-${month}-${day}`
+    
     this.setData({
-      today: `${year}-${month}-${day}`
+      today: todayStr
     })
 
     // 如果是编辑模式，加载植物信息
@@ -44,6 +46,16 @@ Page({
         plantId: options.id
       })
       this.loadPlant(options.id)
+    } else {
+      // 新增模式，设置默认值
+      this.setData({
+        typeIndex: 4, // 默认选择"草本"
+        'formData.type': '草本',
+        'formData.plantDate': todayStr, // 默认种植日期为当天
+        'formData.status': 'healthy',
+        statusIndex: 0,
+        statusLabel: '健康'
+      })
     }
   },
 
