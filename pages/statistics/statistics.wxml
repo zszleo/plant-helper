@@ -52,14 +52,10 @@
   <view class="section" catchtap="onSectionTap">
     <view class="section-header">
       <view class="section-title">每月趋势</view>
-      <view class="heatmap-legend">
-        <view class="legend-item">少</view>
-        <view class="legend-box level-0"></view>
-        <view class="legend-box level-1"></view>
-        <view class="legend-box level-2"></view>
-        <view class="legend-box level-3"></view>
-        <view class="legend-box level-4"></view>
-        <view class="legend-item">多</view>
+      <view class="month-selector">
+        <view class="month-arrow" catchtap="onPrevMonth">‹</view>
+        <view class="month-text">{{currentYear}}年{{currentMonth}}月</view>
+        <view class="month-arrow" catchtap="onNextMonth">›</view>
       </view>
     </view>
     <view class="calendar-heatmap">
@@ -94,6 +90,15 @@
     </view>
     <view class="heatmap-summary">
       <view class="summary-text">本月共记录 <text class="summary-count">{{totalRecords}}</text> 次</view>
+      <view class="heatmap-legend">
+        <view class="legend-item">少</view>
+        <view class="legend-box level-0"></view>
+        <view class="legend-box level-1"></view>
+        <view class="legend-box level-2"></view>
+        <view class="legend-box level-3"></view>
+        <view class="legend-box level-4"></view>
+        <view class="legend-item">多</view>
+      </view>
     </view>
   </view>
 </view>

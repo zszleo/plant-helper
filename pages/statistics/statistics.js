@@ -14,7 +14,9 @@ Page({
     showFullTrend: false,
     calendarData: [],
     totalRecords: 0,
-    activeCell: null
+    activeCell: null,
+    currentYear: new Date().getFullYear(),
+    currentMonth: new Date().getMonth() + 1
   },
 
   onLoad() {
@@ -116,13 +118,7 @@ Page({
     })
 
     // 每月记录趋势（GitHub风格热力图）
-    const oneYearAgo = new Date(now)
-    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1)
-    const allRecentRecords = records.filter(record => {
-      const recordTime = new Date(record.recordTime)
-      return recordTime >= oneYearAgo && recordTime <= now
-    })
-    this.loadHeatmapData(allRecentRecords)
+    this.loadHeatmapDataForMonth(this.data.currentYear, this.data.currentMonth)
   },
 
   /**
@@ -441,6 +437,180 @@ Page({
   onTotalPlantsClick() {
     wx.switchTab({
       url: '/pages/index/index'
+    })
+  },
+
+  /**
+   * 上一个月
+   */
+  onPrevMonth(e) {
+    let { currentYear, currentMonth } = this.data
+    
+    if (currentMonth === 1) {
+      currentYear -= 1
+      currentMonth = 12
+    } else {
+      currentMonth -= 1
+    }
+    
+    this.setData({
+      currentYear,
+      currentMonth
+    })
+    
+    this.loadHeatmapDataForMonth(currentYear, currentMonth)
+  },
+
+  /**
+   * 下一个月
+   */
+  onNextMonth(e) {
+    let { currentYear, currentMonth } = this.data
+    
+    if (currentMonth === 12) {
+      currentYear += 1
+      currentMonth = 1
+    } else {
+      currentMonth += 1
+    }
+    
+    this.setData({
+      currentYear,
+      currentMonth
+    })
+    
+    this.loadHeatmapDataForMonth(currentYear, currentMonth)
+  },
+
+  /**
+   * 加载指定月份的热力图数据
+   */
+  loadHeatmapDataForMonth(year, month) {
+    const plants = storage.getPlants()
+    const allRecords = storage.getRecords()
+    
+    // 过滤掉没有对应植物的记录
+    const validRecords = allRecords.filter(record => {
+      return plants.some(plant => plant._id === record.plantId)
+    })
+    
+    const firstDayOfMonth = new Date(year, month - 1, 1)
+    const lastDayOfMonth = new Date(year, month, 0)
+    
+    // 创建日期到记录数的映射
+    const dateCountMap = {}
+    validRecords.forEach(record => {
+      const recordDate = new Date(record.recordTime)
+      const recordYear = recordDate.getFullYear()
+      const recordMonth = recordDate.getMonth() + 1
+      
+      // 只统计指定月份的记录
+      if (recordYear === year && recordMonth === month) {
+        const day = String(recordDate.getDate()).padStart(2, '0')
+        const dateStr = `${year}-${String(month).padStart(2, '0')}-${day}`
+        dateCountMap[dateStr] = (dateCountMap[dateStr] || 0) + 1
+      }
+    })
+
+    // 计算最大记录数用于颜色分级
+    const maxCount = Math.max(...Object.values(dateCountMap), 1)
+    
+    // GitHub风格的5级颜色算法
+    const getLevel = (count) => {
+      if (count === 0) return 0
+      if (count <= maxCount * 0.25) return 1
+      if (count <= maxCount * 0.5) return 2
+      if (count <= maxCount * 0.75) return 3
+      return 4
+    }
+
+    // 生成本月的所有日期
+    const monthDates = []
+    const currentDate = new Date(firstDayOfMonth)
+    
+    while (currentDate <= lastDayOfMonth) {
+      monthDates.push(new Date(currentDate))
+      currentDate.setDate(currentDate.getDate() + 1)
+    }
+
+    // 按周分组，每周起始为星期一
+    const calendarData = []
+    let currentWeek = []
+    let weekIndex = 0
+    
+    // 计算第一周需要补全的天数（从周一开始）
+    const firstDayOfWeek = firstDayOfMonth.getDay()
+    const daysToAddBefore = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1
+    
+    // 在前面补全空单元格（非本月日期，level设为-1表示不显示颜色）
+    for (let i = 0; i < daysToAddBefore; i++) {
+      const prevDate = new Date(firstDayOfMonth)
+      prevDate.setDate(prevDate.getDate() - (daysToAddBefore - i))
+      const prevYear = prevDate.getFullYear()
+      const prevMonth = String(prevDate.getMonth() + 1).padStart(2, '0')
+      const day = String(prevDate.getDate()).padStart(2, '0')
+      currentWeek.push({
+        date: `${prevYear}-${prevMonth}-${day}`,
+        day: prevDate.getDate(),
+        count: 0,
+        level: -1
+      })
+    }
+    
+    // 添加本月的日期
+    for (let i = 0; i < monthDates.length; i++) {
+      const date = monthDates[i]
+      const dayOfWeek = date.getDay()
+      
+      // 将日期转换为热力图单元格数据
+      const day = String(date.getDate()).padStart(2, '0')
+      const dateStr = `${year}-${String(month).padStart(2, '0')}-${day}`
+      const count = dateCountMap[dateStr] || 0
+      const level = getLevel(count)
+      
+      currentWeek.push({
+        date: dateStr,
+        day: date.getDate(),
+        count: count,
+        level: level
+      })
+      
+      // 如果是周日或者最后一天，结束当前周
+      if (dayOfWeek === 0 || i === monthDates.length - 1) {
+        // 如果不是完整的一周，在后面补全空单元格（非本月日期，level设为-1表示不显示颜色）
+        if (currentWeek.length < 7) {
+          const daysToAddAfter = 7 - currentWeek.length
+          for (let j = 0; j < daysToAddAfter; j++) {
+            const nextDate = new Date(lastDayOfMonth)
+            nextDate.setDate(nextDate.getDate() + (j + 1))
+            const nextYear = nextDate.getFullYear()
+            const nextMonth = String(nextDate.getMonth() + 1).padStart(2, '0')
+            const day = String(nextDate.getDate()).padStart(2, '0')
+            currentWeek.push({
+              date: `${nextYear}-${nextMonth}-${day}`,
+              day: nextDate.getDate(),
+              count: 0,
+              level: -1
+            })
+          }
+        }
+        calendarData.push({
+          weekIndex: weekIndex++,
+          cells: currentWeek
+        })
+        currentWeek = []
+      }
+    }
+
+    // 计算本月总记录数
+    const monthRecords = validRecords.filter(record => {
+      const recordTime = new Date(record.recordTime)
+      return recordTime >= firstDayOfMonth && recordTime <= lastDayOfMonth
+    })
+
+    this.setData({
+      calendarData: calendarData,
+      totalRecords: monthRecords.length
     })
   }
 })
