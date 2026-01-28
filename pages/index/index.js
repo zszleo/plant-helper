@@ -297,6 +297,11 @@ Page({
          */
         switchToPrevTab() {
           // 首页是第一个tab，没有上一个
-          return
+          wx.showToast({
+            title: '已经划到底了哟',
+            icon: 'none',
+            duration: 1000,
+            position: 'bottom'
+          })
         }
       })

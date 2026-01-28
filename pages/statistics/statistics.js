@@ -663,7 +663,12 @@ Page({
    */
   switchToNextTab() {
     // 统计页面是最后一个tab，没有下一个
-    return
+    wx.showToast({
+      title: '已经划到底了哟',
+      icon: 'none',
+      duration: 1000,
+      position: 'bottom'
+    })
   },
 
   /**
