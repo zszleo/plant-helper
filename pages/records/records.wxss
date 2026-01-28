@@ -87,17 +87,32 @@
   width: 64rpx;
   height: 64rpx;
   background: #ffffff;
-  border-radius: 50%;
+  border-radius: 12rpx;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 20rpx;
   box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.06);
+  overflow: hidden;
 }
 
 .card-icon {
-  width: 32rpx;
-  height: 32rpx;
+  width: 64rpx;
+  height: 64rpx;
+}
+
+.card-icon-placeholder {
+  width: 64rpx;
+  height: 64rpx;
+  background: #4CAF50;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder-icon {
+  font-size: 32rpx;
 }
 
 .card-title-wrapper {

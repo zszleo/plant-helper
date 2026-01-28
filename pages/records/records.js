@@ -64,7 +64,8 @@ Page({
         const plant = plants.find(p => p._id === record.plantId)
         return {
           ...record,
-          plantName: plant ? plant.name : '未知植物'
+          plantName: plant ? plant.name : '未知植物',
+          plantImage: plant && plant.imageUrl ? plant.imageUrl : ''
         }
       })
 
@@ -126,10 +127,9 @@ Page({
       if (!grouped[dateKey]) {
         grouped[dateKey] = []
       }
-      // 为每条记录添加图标、标题和格式化时间
+      // 为每条记录添加标题和格式化时间
       grouped[dateKey].push({
         ...record,
-        recordIcon: this.getRecordIcon(record.type),
         recordTitle: this.getRecordTitle(record.type),
         formattedTime: this.formatTime(record.recordTime)
       })
