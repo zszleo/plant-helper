@@ -26,7 +26,7 @@
   font-size: 32rpx;
   font-weight: 600;
   color: #333;
-  margin-bottom: 30rpx;
+  margin-bottom: 24rpx;
 }
 
 /* 月份选择器 */
@@ -78,40 +78,41 @@
 .type-distribution {
   display: flex;
   flex-direction: column;
-  gap: 16rpx;
+  gap: 20rpx;
 }
 
 .type-item {
+  background: #f9f9f9;
+  border-radius: 12rpx;
+  padding: 16rpx;
+}
+
+.type-item-header {
   display: flex;
   align-items: center;
-  padding: 20rpx;
-  background-color: #f9f9f9;
-  border-radius: 12rpx;
+  margin-bottom: 12rpx;
 }
 
 .type-icon {
-  width: 72rpx;
-  height: 72rpx;
+  width: 56rpx;
+  height: 56rpx;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32rpx;
-  margin-right: 20rpx;
+  font-size: 28rpx;
+  margin-right: 12rpx;
 }
 
 .type-info {
   flex: 1;
   display: flex;
   align-items: center;
-  justify-content: space-between;
 }
 
 .type-stats {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8rpx;
+  align-items: center;
 }
 
 .type-name {
@@ -121,18 +122,14 @@
 }
 
 .type-count {
-  font-size: 24rpx;
-  color: #999;
-}
-
-.type-count-text {
-  font-size: 20rpx;
-  color: #999;
-}
-
-.type-percent {
   font-size: 32rpx;
   font-weight: 600;
+}
+
+.type-progress {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
 }
 
 /* 每日趋势 */
@@ -180,8 +177,8 @@
 .plant-status-summary {
   display: flex;
   justify-content: center;
-  padding: 27rpx 0;
-  margin-bottom: 18rpx;
+  padding: 4rpx 0;
+  margin-bottom: 12rpx;
 }
 
 .summary-item {
@@ -216,13 +213,13 @@
 .status-card {
   background: #f9f9f9;
   border-radius: 12rpx;
-  padding: 20rpx;
+  padding: 16rpx;
 }
 
 .status-card-header {
   display: flex;
   align-items: center;
-  margin-bottom: 16rpx;
+  margin-bottom: 12rpx;
 }
 
 .status-icon {
@@ -233,7 +230,7 @@
   align-items: center;
   justify-content: center;
   font-size: 28rpx;
-  margin-right: 16rpx;
+  margin-right: 12rpx;
 }
 
 .status-info {
@@ -244,9 +241,7 @@
 
 .status-stats {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8rpx;
+  align-items: center;
 }
 
 .status-name {
@@ -257,24 +252,13 @@
 
 .status-count {
   font-size: 32rpx;
-  color: #666;
   font-weight: 600;
-}
-
-.status-percent {
-  font-size: 32rpx;
-  font-weight: 600;
-}
-
-.status-count-text {
-  font-size: 20rpx;
-  color: #999;
 }
 
 .status-progress {
   display: flex;
   align-items: center;
-  gap: 12rpx;
+  gap: 8rpx;
 }
 
 .progress-bar {
@@ -303,7 +287,7 @@
   display: flex;
   align-items: center;
   gap: 8rpx;
-  font-size: 20rpx;
+  font-size: 24rpx;
   color: #666;
 }
 

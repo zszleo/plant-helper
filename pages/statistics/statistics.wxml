@@ -17,8 +17,7 @@
             <view class="status-name">{{item.label}}</view>
           </view>
           <view class="status-stats">
-            <view class="status-percent" style="color: {{item.color}}">{{item.percent}}%</view>
-            <view class="status-count-text">{{item.count}}株</view>
+            <view class="status-count" style="color: {{item.color}}">{{item.count}}株</view>
           </view>
         </view>
         <view class="status-progress">
@@ -36,13 +35,20 @@
     <view class="section-title">记录类型分布</view>
     <view class="type-distribution">
       <view class="type-item" wx:for="{{recordStats}}" wx:key="type">
-        <view class="type-icon {{item.type}}" style="background-color: {{item.color}}20; color: {{item.color}}">{{item.icon}}</view>
-        <view class="type-info">
-          <view class="type-name">{{item.name}}</view>
+        <view class="type-item-header">
+          <view class="type-icon {{item.type}}" style="background-color: {{item.color}}20; color: {{item.color}}">{{item.icon}}</view>
+          <view class="type-info">
+            <view class="type-name">{{item.name}}</view>
+          </view>
+          <view class="type-stats">
+            <view class="type-count" style="color: {{item.color}}">{{item.count}}次</view>
+          </view>
         </view>
-        <view class="type-stats">
-          <view class="type-percent" style="color: {{item.color}}">{{item.percent}}%</view>
-          <view class="type-count-text">{{item.count}}次</view>
+        <view class="type-progress">
+          <view class="progress-bar">
+            <view class="progress-fill" style="width: {{item.percent}}%; background-color: {{item.color}}"></view>
+          </view>
+          <view class="progress-text">{{item.percent}}%</view>
         </view>
       </view>
     </view>
