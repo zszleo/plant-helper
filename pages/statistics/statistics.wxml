@@ -1,5 +1,5 @@
 <!--pages/statistics/statistics.wxml-->
-<view class="container">
+<view class="container" bindtouchstart="onTouchStart" bindtouchend="onTouchEnd">
   <!-- 植物状态统计 -->
   <view class="section">
     <view class="section-title">植物状态统计</view>

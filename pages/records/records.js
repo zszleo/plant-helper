@@ -7,7 +7,10 @@ Page({
     plants: [],
     filteredRecords: [],
     groupedRecords: [],
-    selectedType: ''
+    selectedType: '',
+    // 触摸滑动相关
+    touchStartX: 0,
+    touchStartY: 0
   },
 
   onLoad() {
@@ -233,5 +236,59 @@ Page({
       'photo': '拍照记录'
     }
     return titleMap[type] || '记录'
+  },
+
+  /**
+   * 触摸开始
+   */
+  onTouchStart(e) {
+    this.setData({
+      touchStartX: e.touches[0].clientX,
+      touchStartY: e.touches[0].clientY
+    })
+  },
+
+  /**
+   * 触摸结束
+   */
+  onTouchEnd(e) {
+    const touchEndX = e.changedTouches[0].clientX
+    const touchEndY = e.changedTouches[0].clientY
+    const touchStartX = this.data.touchStartX
+    const touchStartY = this.data.touchStartY
+
+    // 计算滑动距离
+    const diffX = touchEndX - touchStartX
+    const diffY = touchEndY - touchStartY
+
+    // 判断是否为水平滑动（水平滑动距离大于垂直滑动距离，且水平滑动距离超过50）
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+      // 向左滑动，切换到下一个页面
+      if (diffX < 0) {
+        this.switchToNextTab()
+      }
+      // 向右滑动，切换到上一个页面
+      else if (diffX > 0) {
+        this.switchToPrevTab()
+      }
+    }
+  },
+
+  /**
+   * 切换到下一个tab
+   */
+  switchToNextTab() {
+    wx.switchTab({
+      url: '/pages/reminders/reminders'
+    })
+  },
+
+  /**
+   * 切换到上一个tab
+   */
+  switchToPrevTab() {
+    wx.switchTab({
+      url: '/pages/index/index'
+    })
   }
 })

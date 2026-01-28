@@ -34,7 +34,7 @@ module.exports = {
   </view>
 </view>
 
-<view class="container" id="pageContainer" scroll-top="{{scrollTop}}">
+<view class="container" id="pageContainer" scroll-top="{{scrollTop}}" bindtouchstart="onTouchStart" bindtouchend="onTouchEnd">
   <!-- 植物列表 -->
   <view class="plant-list">
     <view class="plant-card" wx:for="{{filteredPlants}}" wx:key="_id" bindtap="onPlantDetail" data-id="{{item._id}}">

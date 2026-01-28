@@ -1,5 +1,5 @@
 <!--pages/reminders/reminders.wxml-->
-<view class="container">
+<view class="container" bindtouchstart="onTouchStart" bindtouchend="onTouchEnd">
   <!-- 统计栏 -->
   <view class="stats-bar">
     <view class="stat-item">

@@ -1,5 +1,5 @@
 <!--pages/records/records.wxml-->
-<view class="container">
+<view class="container" bindtouchstart="onTouchStart" bindtouchend="onTouchEnd">
   <!-- 筛选器 -->
   <view class="filter-bar">
     <scroll-view class="filter-scroll" scroll-x="true" show-scrollbar="false">
