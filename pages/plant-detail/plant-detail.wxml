@@ -14,17 +14,21 @@ module.exports = {
 }
 </wxs>
 <view class="container" wx:if="{{plant}}">
-  <!-- 植物图片 -->
-  <view class="image-section">
-    <image 
-      class="plant-image" 
-      src="{{plant.imageUrl || '/images/plant-placeholder.svg'}}"
-      mode="aspectFill"
-    ></image>
+  <!-- 植物图片卡片 -->
+  <view class="image-card-wrapper">
+    <view class="image-card-middle">
+      <view class="image-card-inner">
+        <image
+          class="plant-image"
+          src="{{plant.imageUrl || '/images/plant-placeholder.svg'}}"
+          mode="aspectFill"
+        ></image>
+      </view>
+    </view>
   </view>
 
-  <!-- 植物信息 -->
-  <view class="info-section">
+  <!-- 植物信息卡片 -->
+  <view class="info-card">
     <view class="info-header">
       <text class="plant-name">{{plant.name}}</text>
       <view class="plant-status">
@@ -59,8 +63,8 @@ module.exports = {
   </view>
 
 
-  <!-- 生长记录 -->
-  <view class="records-section">
+  <!-- 生长记录卡片 -->
+  <view class="records-card">
     <view class="section-header">
       <text class="section-title">生长记录</text>
       <view class="section-more" bindtap="onViewAllRecords">

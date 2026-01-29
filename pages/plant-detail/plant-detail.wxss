@@ -5,12 +5,30 @@
   padding-bottom: 120rpx;
 }
 
-/* 图片区域 */
-.image-section {
+/* 图片卡片区域 */
+.image-card-wrapper {
   width: 100%;
-  height: 500rpx;
+  padding: 20rpx 30rpx;
+  background: #f5f5f5;
+  box-sizing: border-box;
+}
+
+.image-card-middle {
+  width: 100%;
+  padding: 32rpx;
   background: #ffffff;
+  border-radius: 28rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+.image-card-inner {
+  width: 100%;
+  height: 420rpx;
+  background: #ffffff;
+  border-radius: 20rpx;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .plant-image {
@@ -18,11 +36,13 @@
   height: 100%;
 }
 
-/* 信息区域 */
-.info-section {
+/* 信息卡片 */
+.info-card {
   background: #ffffff;
-  margin-bottom: 20rpx;
+  margin: 0 30rpx 20rpx 30rpx;
   padding: 30rpx;
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
 }
 
 .info-header {
@@ -121,10 +141,13 @@
 }
 
 
-/* 记录区域 */
-.records-section {
+/* 记录卡片 */
+.records-card {
   background: #ffffff;
+  margin: 0 30rpx 20rpx 30rpx;
   padding: 30rpx;
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
 }
 
 .section-header {

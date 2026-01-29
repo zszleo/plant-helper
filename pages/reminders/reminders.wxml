@@ -1,5 +1,7 @@
 <!--pages/reminders/reminders.wxml-->
 <!-- 统计栏 -->
+
+
 <view class="stats-bar">
     <view class="stat-item">
       <text class="stat-value">{{totalCount}}</text>
