@@ -123,7 +123,14 @@ class StorageService {
   addPlant(plant) {
     const plants = this.getPlants()
     plant._id = this.generateId()
-    plant.createTime = new Date().toISOString()
+    
+    // 转换plantDate为时间戳
+    if (plant.plantDate && typeof plant.plantDate === 'string') {
+      const timeUtils = require('./time.js')
+      plant.plantDate = timeUtils.parseToTimestamp(plant.plantDate)
+    }
+    
+    plant.createTime = Date.now()
     plant.localModified = true
     plant.syncStatus = 'pending'
     plants.push(plant)
@@ -140,7 +147,14 @@ class StorageService {
     const plants = this.getPlants()
     const index = plants.findIndex(p => p._id === plantId)
     if (index !== -1) {
-      plants[index] = { ...plants[index], ...updates, localModified: true, syncStatus: 'pending' }
+      // 转换plantDate为时间戳
+      const convertedUpdates = { ...updates }
+      if (convertedUpdates.plantDate && typeof convertedUpdates.plantDate === 'string') {
+        const timeUtils = require('./time.js')
+        convertedUpdates.plantDate = timeUtils.parseToTimestamp(convertedUpdates.plantDate)
+      }
+      
+      plants[index] = { ...plants[index], ...convertedUpdates, localModified: true, syncStatus: 'pending' }
       return this.setPlants(plants)
     }
     return false
@@ -243,7 +257,14 @@ class StorageService {
   addRecord(record) {
     const records = this.getRecords()
     record._id = this.generateId()
-    record.createTime = new Date().toISOString()
+    
+    // 转换recordTime为时间戳
+    if (record.recordTime && typeof record.recordTime === 'string') {
+      const timeUtils = require('./time.js')
+      record.recordTime = timeUtils.parseToTimestamp(record.recordTime)
+    }
+    
+    record.createTime = Date.now()
     record.localCreated = true
     records.push(record)
     return this.setRecords(records)
@@ -324,7 +345,14 @@ class StorageService {
   addReminder(reminder) {
     const reminders = this.getReminders()
     reminder._id = this.generateId()
-    reminder.createTime = new Date().toISOString()
+    
+    // 转换nextRemindTime为时间戳
+    if (reminder.nextRemindTime && typeof reminder.nextRemindTime === 'string') {
+      const timeUtils = require('./time.js')
+      reminder.nextRemindTime = timeUtils.parseToTimestamp(reminder.nextRemindTime)
+    }
+    
+    reminder.createTime = Date.now()
     reminder.isEnabled = true
     reminders.push(reminder)
     return this.setReminders(reminders)
@@ -340,7 +368,14 @@ class StorageService {
     const reminders = this.getReminders()
     const index = reminders.findIndex(r => r._id === reminderId)
     if (index !== -1) {
-      reminders[index] = { ...reminders[index], ...updates }
+      // 转换nextRemindTime为时间戳
+      const convertedUpdates = { ...updates }
+      if (convertedUpdates.nextRemindTime && typeof convertedUpdates.nextRemindTime === 'string') {
+        const timeUtils = require('./time.js')
+        convertedUpdates.nextRemindTime = timeUtils.parseToTimestamp(convertedUpdates.nextRemindTime)
+      }
+      
+      reminders[index] = { ...reminders[index], ...convertedUpdates }
       return this.setReminders(reminders)
     }
     return false
@@ -397,7 +432,7 @@ class StorageService {
   addOfflineOperation(operation) {
     const queue = this.getOfflineQueue()
     operation.id = this.generateId()
-    operation.timestamp = new Date().toISOString()
+    operation.timestamp = Date.now()
     queue.push(operation)
     return this.set(STORAGE_KEYS.OFFLINE_QUEUE, queue)
   }

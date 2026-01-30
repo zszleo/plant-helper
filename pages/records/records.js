@@ -1,5 +1,6 @@
 // pages/records/records.js
 const storage = require('../../utils/storage.js')
+const timeUtils = require('../../utils/time.js')
 
 Page({
   data: {
@@ -84,7 +85,7 @@ Page({
       })
 
     // 按时间倒序排列
-    recordsWithPlantName.sort((a, b) => new Date(b.recordTime) - new Date(a.recordTime))
+    recordsWithPlantName.sort((a, b) => timeUtils.parseToTimestamp(b.recordTime) - timeUtils.parseToTimestamp(a.recordTime))
 
     this.setData({
       records: recordsWithPlantName
@@ -179,14 +180,16 @@ Page({
   groupRecordsByDate(recordsToGroup = null) {
     const records = recordsToGroup || this.data.filteredRecords
     const grouped = {}
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
+    const todayTimestamp = Date.now()
+    const todayDate = new Date(todayTimestamp)
+    todayDate.setHours(0, 0, 0, 0)
 
     records.forEach(record => {
-      const recordDate = new Date(record.recordTime)
+      const recordTimestamp = timeUtils.parseToTimestamp(record.recordTime)
+      const recordDate = new Date(recordTimestamp)
       recordDate.setHours(0, 0, 0, 0)
       
-      const diffDays = Math.floor((today - recordDate) / (1000 * 60 * 60 * 24))
+      const diffDays = Math.floor((todayDate - recordDate) / (1000 * 60 * 60 * 24))
       
       let dateKey
       if (diffDays === 0) {
@@ -209,7 +212,7 @@ Page({
       grouped[dateKey].push({
         ...record,
         recordTitle: this.getRecordTitle(record.type),
-        formattedTime: this.formatTime(record.recordTime)
+        formattedTime: timeUtils.formatDateTime(recordTimestamp)
       })
     })
 
@@ -277,20 +280,7 @@ Page({
     })
   },
 
-   /**
-    * 格式化时间
-    */
-   formatTime(timeStr) {
-     if (!timeStr) return ''
-     const date = new Date(timeStr)
-     const year = date.getFullYear()
-     const month = String(date.getMonth() + 1).padStart(2, '0')
-     const day = String(date.getDate()).padStart(2, '0')
-     const hours = String(date.getHours()).padStart(2, '0')
-     const minutes = String(date.getMinutes()).padStart(2, '0')
-     const seconds = String(date.getSeconds()).padStart(2, '0')
-     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
-   },
+
 
   /**
    * 获取记录图标

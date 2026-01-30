@@ -1,5 +1,6 @@
 // pages/record-add/record-add.js
 const storage = require('../../utils/storage.js')
+const timeUtils = require('../../utils/time.js')
 
 Page({
   data: {
@@ -322,11 +323,7 @@ Page({
   formatDateDisplay() {
     if (!this.data.formData.recordTime) return '请选择时间'
     
-    const date = new Date(this.data.formData.recordTime)
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    const day = String(date.getDate()).padStart(2, '0')
-    const hours = String(date.getHours()).padStart(2, '0')
-    const minutes = String(date.getMinutes()).padStart(2, '0')
-    return `${month}-${day} ${hours}:${minutes}`
+    const timestamp = timeUtils.parseToTimestamp(this.data.formData.recordTime)
+    return timeUtils.formatDateTime(timestamp)
   }
 })

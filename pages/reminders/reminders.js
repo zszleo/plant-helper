@@ -1,5 +1,6 @@
 // pages/reminders/reminders.js
 const storage = require('../../utils/storage.js')
+const timeUtils = require('../../utils/time.js')
 
 Page({
   data: {
@@ -74,7 +75,7 @@ Page({
     remindersWithPlantName.sort((a, b) => {
       if (!a.nextRemindTime) return 1
       if (!b.nextRemindTime) return -1
-      return new Date(a.nextRemindTime) - new Date(b.nextRemindTime)
+      return timeUtils.parseToTimestamp(a.nextRemindTime) - timeUtils.parseToTimestamp(b.nextRemindTime)
     })
 
     // 统计数量
@@ -210,9 +211,9 @@ Page({
   formatNextTime(timeStr) {
     if (!timeStr) return '未设置'
     
-    const date = new Date(timeStr)
-    const now = new Date()
-    const diff = date - now
+    const timestamp = timeUtils.parseToTimestamp(timeStr)
+    const now = Date.now()
+    const diff = timestamp - now
 
     if (diff < 0) {
       return '已过期'
@@ -227,11 +228,13 @@ Page({
       const days = Math.floor(diff / 86400000)
       return `${days}天后`
     } else {
+      const date = new Date(timestamp)
+      const year = date.getFullYear()
       const month = String(date.getMonth() + 1).padStart(2, '0')
       const day = String(date.getDate()).padStart(2, '0')
       const hours = String(date.getHours()).padStart(2, '0')
       const minutes = String(date.getMinutes()).padStart(2, '0')
-      return `${month}-${day} ${hours}:${minutes}`
+      return `${year}-${month}-${day} ${hours}:${minutes}`
     }
   },
 

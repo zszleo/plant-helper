@@ -1,5 +1,6 @@
 // pages/plant-add/plant-add.js
 const storage = require('../../utils/storage.js')
+const timeUtils = require('../../utils/time.js')
 
 Page({
   data: {
@@ -68,14 +69,14 @@ Page({
       const typeIndex = this.data.plantTypes.indexOf(plant.type)
       const statusIndex = this.data.statusOptions.findIndex(s => s.value === plant.status)
       
-      this.setData({
-        formData: {
-          name: plant.name,
-          type: plant.type,
-          plantDate: plant.plantDate,
-          status: plant.status,
-          description: plant.description || ''
-        },
+       this.setData({
+         formData: {
+           name: plant.name,
+           type: plant.type,
+            plantDate: timeUtils.formatDate(timeUtils.parseToTimestamp(plant.plantDate)),
+           status: plant.status,
+           description: plant.description || ''
+         },
         imageUrl: plant.imageUrl || '',
         typeIndex: typeIndex >= 0 ? typeIndex : 0,
         statusIndex: statusIndex >= 0 ? statusIndex : 0,

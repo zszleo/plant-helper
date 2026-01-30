@@ -1,5 +1,6 @@
 // pages/statistics/statistics.js
 const storage = require('../../utils/storage.js')
+const timeUtils = require('../../utils/time.js')
 
 Page({
   data: {
@@ -95,7 +96,7 @@ Page({
 
     // 筛选时间范围内的记录
     const filteredRecords = records.filter(record => {
-      const recordTime = new Date(record.recordTime)
+      const recordTime = new Date(timeUtils.parseToTimestamp(record.recordTime))
       return recordTime >= startDate && recordTime <= now
     })
 
@@ -149,7 +150,7 @@ Page({
       nextDate.setDate(nextDate.getDate() + 1)
 
       const dayRecords = records.filter(record => {
-        const recordTime = new Date(record.recordTime)
+      const recordTime = new Date(timeUtils.parseToTimestamp(record.recordTime))
         return recordTime >= date && recordTime < nextDate
       })
 
@@ -187,7 +188,7 @@ Page({
     // 创建日期到记录数的映射
     const dateCountMap = {}
     records.forEach(record => {
-      const recordDate = new Date(record.recordTime)
+      const recordDate = new Date(timeUtils.parseToTimestamp(record.recordTime))
       const year = recordDate.getFullYear()
       const month = String(recordDate.getMonth() + 1).padStart(2, '0')
       const day = String(recordDate.getDate()).padStart(2, '0')
@@ -289,7 +290,7 @@ Page({
 
     // 计算本月总记录数
     const monthRecords = records.filter(record => {
-      const recordTime = new Date(record.recordTime)
+      const recordTime = new Date(timeUtils.parseToTimestamp(record.recordTime))
       return recordTime >= firstDayOfMonth && recordTime <= lastDayOfMonth
     })
 
@@ -508,7 +509,7 @@ Page({
     // 创建日期到记录数的映射
     const dateCountMap = {}
     validRecords.forEach(record => {
-      const recordDate = new Date(record.recordTime)
+      const recordDate = new Date(timeUtils.parseToTimestamp(record.recordTime))
       const recordYear = recordDate.getFullYear()
       const recordMonth = recordDate.getMonth() + 1
       
@@ -612,7 +613,7 @@ Page({
 
     // 计算本月总记录数
     const monthRecords = validRecords.filter(record => {
-      const recordTime = new Date(record.recordTime)
+      const recordTime = new Date(timeUtils.parseToTimestamp(record.recordTime))
       return recordTime >= firstDayOfMonth && recordTime <= lastDayOfMonth
     })
 

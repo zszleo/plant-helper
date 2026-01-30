@@ -1,5 +1,6 @@
 // pages/record-detail/record-detail.js
 const storage = require('../../utils/storage.js')
+const timeUtils = require('../../utils/time.js')
 
 Page({
   data: {
@@ -45,7 +46,7 @@ Page({
       // 计算显示数据
       const recordIcon = this.getRecordIcon(record.type)
       const recordTitle = this.getRecordTitle(record.type)
-      const formattedTime = this.formatTime(record.recordTime)
+      const formattedTime = timeUtils.formatDateTime(timeUtils.parseToTimestamp(record.recordTime))
 
       this.setData({
         record: recordWithPlantName,
@@ -170,21 +171,7 @@ Page({
     })
   },
 
-  /**
-   * 格式化时间
-   */
-  formatTime(timeStr) {
-    if (!timeStr) return ''
-    const date = new Date(timeStr)
-    if (isNaN(date.getTime())) return ''
-    const year = date.getFullYear()
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    const day = String(date.getDate()).padStart(2, '0')
-    const hours = String(date.getHours()).padStart(2, '0')
-    const minutes = String(date.getMinutes()).padStart(2, '0')
-    const seconds = String(date.getSeconds()).padStart(2, '0')
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
-  },
+
 
   /**
    * 获取记录图标

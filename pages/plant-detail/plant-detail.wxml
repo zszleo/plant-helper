@@ -44,7 +44,7 @@ module.exports = {
       </view>
       <view class="info-item">
         <text class="info-label">种植日期</text>
-        <text class="info-value">{{plant.plantDate}}</text>
+        <text class="info-value">{{plant.plantDateFormatted}}</text>
       </view>
       <view class="info-item">
         <text class="info-label">记录数</text>
